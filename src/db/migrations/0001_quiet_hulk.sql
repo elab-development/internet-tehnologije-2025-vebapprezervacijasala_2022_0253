@@ -1,0 +1,2 @@
+ALTER TABLE "korisnik" ADD COLUMN "idUloga" uuid NOT NULL;--> statement-breakpoint
+ALTER TABLE "korisnik" ADD CONSTRAINT "korisnik_idUloga_Uloga_idUloge_fk" FOREIGN KEY ("idUloga") REFERENCES "public"."Uloga"("idUloge") ON DELETE no action ON UPDATE no action;

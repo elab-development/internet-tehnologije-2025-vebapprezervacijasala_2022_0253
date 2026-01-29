@@ -55,7 +55,7 @@ export const korisnik = pgTable("korisnik", {
     email: varchar("email", { length: 255 }).notNull().unique(),
     passHash: varchar("pass_hash", { length: 255 }).notNull(),
     createdAt: timestamp("created_at").defaultNow(),
-  //  idUloga: uuid("idUloga").notNull().references(()=>Uloga.idUloge)
+    idUloga: uuid("idUloga").notNull().references(()=>Uloga.idUloge)
 });
 
 export const Dogadjaj=pgTable("dogadjaj",{

@@ -10,6 +10,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const[confirmpwd,setConfirmPwd]=useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +21,12 @@ export default function AuthForm({ mode }: { mode: Mode }) {
      e.preventDefault();
      setErr("");
     setLoading(true);
-     
+     if (mode === "register" && pwd !== confirmpwd) {
+    setErr("Lozinke se ne poklapaju");
+    window.alert(err);
+    setLoading(false);
+    return;
+  }
      try{
       const endpoint=mode==="login"?"/api/auth/login":"api/auth/register";
       const body=mode==="login"?{email,password:pwd}:{name,email,password:pwd};
@@ -113,7 +119,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
               <input
                 type="password"
                 name="confirmPassword"
-                //onChange
+                value={confirmpwd}
+              onChange={(e)=>setConfirmPwd(e.target.value)}
                 placeholder="Ponovite lozinku"
                 className="w-full p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
                 required

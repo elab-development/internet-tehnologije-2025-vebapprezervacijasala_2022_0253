@@ -12,6 +12,7 @@ await db.transaction(async (tx) => {
             name: "lala Petrovic",
             email: "lalap@gmail.com",
             passHash: hash,
+            idUloga:"9547b7f9-c876-4d8e-b975-cf298c8a97af"
            
         },
         
