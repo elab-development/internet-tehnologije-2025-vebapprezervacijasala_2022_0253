@@ -2,33 +2,38 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const sale=[
-    {
-        id:1,
-        naziv:"Ucionica 1",
-        kapacitet:30,
-        sprat:1
-    },
-      {
-        id:2,
-        naziv:"Ucionica 2",
-        kapacitet:50,
-        sprat:1
-    },
-      {
-        id:3,
-        naziv:"Konferencijska sala 1",
-        kapacitet:100,
-        sprat:2
-    }
-    
-]
+
+/*
+type Sala = {
+  id: string;
+  naziv: string;
+  kapacitet: number;
+  sprat: number;
+};
+*/
+type OpremaDTO = {
+  id: string;
+  naziv: string;
+};
+
+type SalaDTO = {
+  id: string;
+  naziv: string;
+  kapacitet: number;
+  sprat: number;
+  urlSlike:string;
+  oprema: OpremaDTO[];
+};
+
+type PregledSalaProps = {
+  sale: SalaDTO[];
+};
 
 
 
 
-export default function PregledSala() {
- 
+export default function PregledSala({ sale }: PregledSalaProps) {
+
   return (
     <section className="px-8 py-12 bg-[#7B542F]">
       <h2 className="text-2xl font-bold text-[#FFCF71] mb-6">Dostupne sale</h2>
@@ -41,7 +46,8 @@ export default function PregledSala() {
           >
             <div className="relative h-48 w-full">
               <Image
-                src={"/public/slika.jpg"}
+                src={sala.urlSlike}
+                
                 alt={"Slika sale"}
                 fill
                 className="object-cover"
@@ -53,20 +59,34 @@ export default function PregledSala() {
               <p className="text-[#B6771D] mb-4">Sprat: {sala.sprat}</p>
             </div>
 
-            
-              <button
-               // onClick
-                className="mt-auto bg-[#7B542F] text-[#B6771D] py-2 px-4 rounded-md hover:bg-[#FFCF71] text-center transition"
-              >
-                Rezerviši
-              </button>
-            
+            {/* Oprema */}
+            <div className="mt-3">
+              <h3 className="font-semibold">Oprema:</h3>
+
+              {sala.oprema.length === 0 ? (
+                <p className="text-gray-500">Nema dodatne opreme</p>
+              ) : (
+                <ul className="list-disc list-inside">
+                  {sala.oprema.map((o) => (
+                    <li key={o.id}>{o.naziv}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+<br></br>
+            <button
+              // onClick
+              className="mt-auto bg-[#7B542F] text-[#B6771D] py-2 px-4 rounded-md hover:bg-[#FFCF71] text-center transition"
+            >
+              Rezerviši
+            </button>
+
           </div>
         ))}
       </div>
 
-      
-      
+
+
     </section>
   );
 }
