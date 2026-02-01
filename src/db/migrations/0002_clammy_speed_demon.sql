@@ -1,0 +1,1 @@
+ALTER TABLE "rezervacija" ADD COLUMN "status" varchar(100);

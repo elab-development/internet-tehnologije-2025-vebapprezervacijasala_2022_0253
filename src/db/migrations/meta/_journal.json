@@ -15,6 +15,13 @@
       "when": 1769706202288,
       "tag": "0001_quiet_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769961176644,
+      "tag": "0002_clammy_speed_demon",
+      "breakpoints": true
     }
   ]
 }

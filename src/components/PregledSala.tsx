@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
+import RezervacijaForm from "./RezervacijaForma";
 
 
 /*
@@ -35,6 +36,9 @@ type PregledSalaProps = {
 
 export default function PregledSala({ sale }: PregledSalaProps) {
  const { user } = useAuth();
+ const [selektovanaSala,setSelektovanaSala]=useState<SalaDTO | null>(null);
+const[prikaziFormu,setPrikaziFormu]=useState(false);
+
   return (
     <section className="px-8 py-12 bg-[#7B542F]">
       <h2 className="text-2xl font-bold text-[#FFCF71] mb-6">Dostupne sale</h2>
@@ -77,7 +81,10 @@ export default function PregledSala({ sale }: PregledSalaProps) {
 <br></br>
 {user && (
             <button
-              // onClick
+               onClick={() => {setSelektovanaSala(sala);
+                setPrikaziFormu(true);
+               }
+               } 
               className="mt-auto bg-[#7B542F] text-[#B6771D] py-2 px-4 rounded-md hover:bg-[#FFCF71] text-center transition"
             >
               Rezerviši
@@ -87,7 +94,17 @@ export default function PregledSala({ sale }: PregledSalaProps) {
         ))}
       </div>
 
-
+{/* Modal sa formom */}
+      {selektovanaSala && prikaziFormu && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+          <RezervacijaForm
+            salaId={selektovanaSala.id}
+            salaNaziv={selektovanaSala.naziv}
+            kapacitet={selektovanaSala.kapacitet}
+            onCancel={() => setPrikaziFormu(false)} 
+          />
+        </div>
+      )}
 
     </section>
   );

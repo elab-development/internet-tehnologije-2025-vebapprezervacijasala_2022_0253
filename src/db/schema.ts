@@ -70,7 +70,7 @@ export const Rezervacija=pgTable("rezervacija",{
     kraj:timestamp("kraj").notNull(),
     brojUcesnika:integer("brojUcesnika").notNull(),
     ukupnaCena:doublePrecision("ukupnaCena"),
-   // status:varchar("status",{length:100}),
+    status:varchar("status",{length:100}),
     salaId:uuid("Salaid").notNull().references(()=>Sala.id),
     dogadjajId:uuid("Dogadjajid").references(()=>Dogadjaj.idDogadjaja),
     KorisnikId:uuid("Korsinikid").references(()=>korisnik.idKorisnik)
