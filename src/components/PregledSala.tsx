@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image";
 import { useState } from "react";
+import { useAuth } from "./AuthProvider";
 
 const sale=[
     {
@@ -29,6 +30,8 @@ const sale=[
 
 export default function PregledSala() {
  
+const {user}=useAuth();
+
   return (
     <section className="px-8 py-12 bg-[#7B542F]">
       <h2 className="text-2xl font-bold text-[#FFCF71] mb-6">Dostupne sale</h2>
@@ -53,14 +56,14 @@ export default function PregledSala() {
               <p className="text-[#B6771D] mb-4">Sprat: {sala.sprat}</p>
             </div>
 
-            
+            {user && (
               <button
                // onClick
                 className="mt-auto bg-[#7B542F] text-[#B6771D] py-2 px-4 rounded-md hover:bg-[#FFCF71] text-center transition"
               >
                 Rezerviši
               </button>
-            
+            )}
           </div>
         ))}
       </div>

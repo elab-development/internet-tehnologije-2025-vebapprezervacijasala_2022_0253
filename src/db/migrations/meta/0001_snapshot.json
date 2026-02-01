@@ -1,0 +1,584 @@
+{
+  "id": "ee89735f-c5b4-4aba-8660-f7a151bea03e",
+  "prevId": "11cb5016-1cac-43b7-8cdc-e33068b89dab",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.Cena": {
+      "name": "Cena",
+      "schema": "",
+      "columns": {
+        "idSale": {
+          "name": "idSale",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "datumOd": {
+          "name": "datumOd",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "iznos": {
+          "name": "iznos",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Cena_idSale_Sala_idSale_fk": {
+          "name": "Cena_idSale_Sala_idSale_fk",
+          "tableFrom": "Cena",
+          "tableTo": "Sala",
+          "columnsFrom": [
+            "idSale"
+          ],
+          "columnsTo": [
+            "idSale"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "Cena_idSale_datumOd_pk": {
+          "name": "Cena_idSale_datumOd_pk",
+          "columns": [
+            "idSale",
+            "datumOd"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.dogadjaj": {
+      "name": "dogadjaj",
+      "schema": "",
+      "columns": {
+        "idDogadjaja": {
+          "name": "idDogadjaja",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nazivDogadjaja": {
+          "name": "nazivDogadjaja",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Oprema": {
+      "name": "Oprema",
+      "schema": "",
+      "columns": {
+        "idOprema": {
+          "name": "idOprema",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nazivOpreme": {
+          "name": "nazivOpreme",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opisOpreme": {
+          "name": "opisOpreme",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.recenzija": {
+      "name": "recenzija",
+      "schema": "",
+      "columns": {
+        "idRezervacija": {
+          "name": "idRezervacija",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idRecenzije": {
+          "name": "idRecenzije",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ocena": {
+          "name": "ocena",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "komentar": {
+          "name": "komentar",
+          "type": "varchar(3000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "recenzija_idRezervacija_rezervacija_idReezrvacija_fk": {
+          "name": "recenzija_idRezervacija_rezervacija_idReezrvacija_fk",
+          "tableFrom": "recenzija",
+          "tableTo": "rezervacija",
+          "columnsFrom": [
+            "idRezervacija"
+          ],
+          "columnsTo": [
+            "idReezrvacija"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "recenzija_idRezervacija_idRecenzije_pk": {
+          "name": "recenzija_idRezervacija_idRecenzije_pk",
+          "columns": [
+            "idRezervacija",
+            "idRecenzije"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rezervacija": {
+      "name": "rezervacija",
+      "schema": "",
+      "columns": {
+        "idReezrvacija": {
+          "name": "idReezrvacija",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "napomena": {
+          "name": "napomena",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pocetak": {
+          "name": "pocetak",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kraj": {
+          "name": "kraj",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "brojUcesnika": {
+          "name": "brojUcesnika",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ukupnaCena": {
+          "name": "ukupnaCena",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "Salaid": {
+          "name": "Salaid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Dogadjajid": {
+          "name": "Dogadjajid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "Korsinikid": {
+          "name": "Korsinikid",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rezervacija_Salaid_Sala_idSale_fk": {
+          "name": "rezervacija_Salaid_Sala_idSale_fk",
+          "tableFrom": "rezervacija",
+          "tableTo": "Sala",
+          "columnsFrom": [
+            "Salaid"
+          ],
+          "columnsTo": [
+            "idSale"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rezervacija_Dogadjajid_dogadjaj_idDogadjaja_fk": {
+          "name": "rezervacija_Dogadjajid_dogadjaj_idDogadjaja_fk",
+          "tableFrom": "rezervacija",
+          "tableTo": "dogadjaj",
+          "columnsFrom": [
+            "Dogadjajid"
+          ],
+          "columnsTo": [
+            "idDogadjaja"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "rezervacija_Korsinikid_korisnik_idKorisnik_fk": {
+          "name": "rezervacija_Korsinikid_korisnik_idKorisnik_fk",
+          "tableFrom": "rezervacija",
+          "tableTo": "korisnik",
+          "columnsFrom": [
+            "Korsinikid"
+          ],
+          "columnsTo": [
+            "idKorisnik"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Sala": {
+      "name": "Sala",
+      "schema": "",
+      "columns": {
+        "idSale": {
+          "name": "idSale",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nazivSale": {
+          "name": "nazivSale",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kapacitetSale": {
+          "name": "kapacitetSale",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sprat": {
+          "name": "sprat",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "urlSlike": {
+          "name": "urlSlike",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "idTipaSale": {
+          "name": "idTipaSale",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Sala_idTipaSale_TipSale_idTipa_fk": {
+          "name": "Sala_idTipaSale_TipSale_idTipa_fk",
+          "tableFrom": "Sala",
+          "tableTo": "TipSale",
+          "columnsFrom": [
+            "idTipaSale"
+          ],
+          "columnsTo": [
+            "idTipa"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.salaOprema": {
+      "name": "salaOprema",
+      "schema": "",
+      "columns": {
+        "idSala": {
+          "name": "idSala",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idOprema": {
+          "name": "idOprema",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kolicina": {
+          "name": "kolicina",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "salaOprema_idSala_Sala_idSale_fk": {
+          "name": "salaOprema_idSala_Sala_idSale_fk",
+          "tableFrom": "salaOprema",
+          "tableTo": "Sala",
+          "columnsFrom": [
+            "idSala"
+          ],
+          "columnsTo": [
+            "idSale"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "salaOprema_idOprema_Oprema_idOprema_fk": {
+          "name": "salaOprema_idOprema_Oprema_idOprema_fk",
+          "tableFrom": "salaOprema",
+          "tableTo": "Oprema",
+          "columnsFrom": [
+            "idOprema"
+          ],
+          "columnsTo": [
+            "idOprema"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.TipSale": {
+      "name": "TipSale",
+      "schema": "",
+      "columns": {
+        "idTipa": {
+          "name": "idTipa",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "opisTipaSale": {
+          "name": "opisTipaSale",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nazivTipaSale": {
+          "name": "nazivTipaSale",
+          "type": "varchar(250)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "minKapacitet": {
+          "name": "minKapacitet",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Uloga": {
+      "name": "Uloga",
+      "schema": "",
+      "columns": {
+        "idUloge": {
+          "name": "idUloge",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "NazivUloge": {
+          "name": "NazivUloge",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.korisnik": {
+      "name": "korisnik",
+      "schema": "",
+      "columns": {
+        "idKorisnik": {
+          "name": "idKorisnik",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "ime": {
+          "name": "ime",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pass_hash": {
+          "name": "pass_hash",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "idUloga": {
+          "name": "idUloga",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "korisnik_idUloga_Uloga_idUloge_fk": {
+          "name": "korisnik_idUloga_Uloga_idUloge_fk",
+          "tableFrom": "korisnik",
+          "tableTo": "Uloga",
+          "columnsFrom": [
+            "idUloga"
+          ],
+          "columnsTo": [
+            "idUloge"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "korisnik_email_unique": {
+          "name": "korisnik_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
