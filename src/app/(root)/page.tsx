@@ -47,7 +47,7 @@ export default function Home() {
 
   return (
     <div>
-      <PretragaSala />
+      <PretragaSala setSale={setSale}/>
       {loading ? ( <p className="text-center py-10">Učitavanje sala...</p>):
       <PregledSala sale={sale}/>}
     </div>

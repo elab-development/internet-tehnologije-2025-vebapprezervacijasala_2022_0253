@@ -18,8 +18,8 @@ await db.transaction(async (tx) => {
 
 
     ])*/
-   /*
-    await tx.insert(TipSale).values([
+   
+  /*  await tx.insert(TipSale).values([
         {
             id: "86699ca7-8cec-4297-ab70-925dca850923",
             opis: "haha",
@@ -30,8 +30,8 @@ await db.transaction(async (tx) => {
         },
 
 
-    ])
-    await tx.insert(Sala).values([
+    ])*/
+   /* await tx.insert(Sala).values([
         {
             id: "ab0760b1-8cec-4297-ab70-925dca850923",
             naziv: "Ucionica 1",
@@ -76,8 +76,8 @@ await db.transaction(async (tx) => {
         },
 
 
-    ])*/ 
-      await tx.insert(SalaOprema).values([
+    ])*/
+     await tx.insert(SalaOprema).values([
         {
             salaId: "5e51614c-ceee-40fd-846a-91d862da317c",
             opremaId:"46fae041-3c48-4dd7-8553-525a9446ae21",

@@ -1,13 +1,19 @@
 import { db } from "@/db";
-import { Oprema, Rezervacija, Sala, SalaOprema } from "@/db/schema";
+import { Oprema, Rezervacija, Sala, SalaOprema, TipSale } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 
-
+     
     try {
-
+    const url=new URL(req.url);
+    const kapacitetParametar=url.searchParams.get("kapacitet");
+    const kapacitet=kapacitetParametar?parseInt(kapacitetParametar):-1;
+    const tipParam=url.searchParams.get("tip");
+    const pocetakParam=url.searchParams.get("start");
+    
+    const zavrsetakParama=url.searchParams.get("end");
         //  let sale = await db.select().from(Sala);
         const rows = await db
             .select({
@@ -16,13 +22,14 @@ export async function GET(req: NextRequest) {
                 kapacitet: Sala.kapacitet,
                 sprat: Sala.sprat,
                 urlSlike:Sala.urlSlike,
-
+                tipSale:Sala.idTipaSale,
                 opremaId: Oprema.id,
                 nazivOpreme: Oprema.nazivOpreme,
             })
             .from(Sala)
             .leftJoin(SalaOprema, eq(SalaOprema.salaId, Sala.id))
-            .leftJoin(Oprema, eq(SalaOprema.opremaId, Oprema.id));
+            .leftJoin(Oprema, eq(SalaOprema.opremaId, Oprema.id))
+            .leftJoin(TipSale,eq(Sala.idTipaSale,TipSale.id));
 
         // Grupisanje u strukturu po salama
         const map = new Map<string, any>();
@@ -35,6 +42,7 @@ export async function GET(req: NextRequest) {
                     kapacitet: row.kapacitet,
                     sprat: row.sprat,
                     urlSlike:row.urlSlike,
+                    tipSale:row.tipSale,
                     oprema: [],
                 });
             }
@@ -47,8 +55,28 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        const rezultat = Array.from(map.values());
+        let rezultat = Array.from(map.values());
+         if(kapacitet!==-1){
+          rezultat=rezultat.filter(s=>s.kapacitet===kapacitet);
+    }
 
+       if(tipParam){
+         rezultat=rezultat.filter(s=>s.tipSale===tipParam);
+    }
+    const rezervacije=await db.select().from(Rezervacija);
+    if(pocetakParam && zavrsetakParama){
+        const start = new Date(pocetakParam+":00Z");
+        
+        const end = new Date(zavrsetakParama+":00Z");
+        const rezervacijeIds=rezervacije.
+        filter(r=>{
+            const pocetak=new Date(r.pocetak);
+            const kraj=new Date(r.kraj);
+            return start<kraj && end>pocetak;
+        }).map(r=>r.salaId);
+
+        rezultat=rezultat.filter(r=>!rezervacijeIds.includes(r.id));
+    }
         return NextResponse.json(rezultat);
         //return NextResponse.json(sale);
 
