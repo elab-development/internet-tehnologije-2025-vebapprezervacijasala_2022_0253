@@ -20,9 +20,9 @@ export async function POST(req: NextRequest) {
     if (!salaId || !datumPocetka || !datumKraj || !vremePocetka || !vremeKraja || !brojUcesnika)
       return NextResponse.json({ error: "Nedostaju obavezna polja" }, { status: 400 });
 
-    const start = new Date(`${datumPocetka}T${vremePocetka}`+":00Z"
+    const start = new Date(`${datumPocetka}T${vremePocetka}`
     );
-    const end = new Date(`${datumKraj}T${vremeKraja}`+":00Z");
+    const end = new Date(`${datumKraj}T${vremeKraja}`);
 
     // 3. Proveri da li je sala slobodna
     const rezervacije = await db.select().from(Rezervacija)
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       kraj: end,
       brojUcesnika,
       napomena,
-      status:"aktuelno"
+      status: "aktuelno"
     });
 
     return NextResponse.json({ ok: true });

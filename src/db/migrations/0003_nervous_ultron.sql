@@ -1,0 +1,1 @@
+ALTER TABLE "recenzija" ALTER COLUMN "idRecenzije" SET DEFAULT gen_random_uuid();

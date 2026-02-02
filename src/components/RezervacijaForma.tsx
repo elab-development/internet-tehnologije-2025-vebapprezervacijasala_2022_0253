@@ -10,19 +10,43 @@ type RezervacijaFormProps = {
   kapacitet:number;
   onCancel?: () => void; 
 };
+/*
+type RezervacijaFormProps = {
+  rezervacija?: {
+    id: string;
+    salaId: string;
+    salaNaziv: string;
+
+    datumPocetka: string;
+    datumKraj: string;
+    vremePocetka: string;
+    vremeKraja: string;
+kapacitet:number;
+    brojUcesnika: number;
+    napomena: string;
+  };
+  onClose: () => void;
+  onSaved: () => void;
+};
+
+*/
 type Dogadjaj={
     idDogadjaj:string;
     nazivDogadjaja:string;
 };
 
-export default function RezervacijaForm({ salaId, salaNaziv,kapacitet,onCancel }: RezervacijaFormProps) {
-  const [datumPocetka, setDatumPocetka] = useState("");
+export default function RezervacijaForm({ salaId,salaNaziv,kapacitet,onCancel }: RezervacijaFormProps) {
+ const [datumPocetka, setDatumPocetka] = useState("");
   const [datumKraj, setDatumKraj] = useState("");
   const [viseDana, setViseDana] = useState(false);
   const [vremePocetka, setVremePocetka] = useState("");
   const [vremeKraja, setVremeKraja] = useState("");
   const [brojUcesnika, setBrojUcesnika] = useState<number | "">("");
   const [napomena, setNapomena] = useState("");
+
+
+
+
   // const[dogadjaji,setDogadjaji]=useState<Dogadjaj[]>([]);
    ///const[selektovaniDogadjaj,setSelektovaniDogadjaj]=useState<string>("");
  /*useEffect(()=>{
@@ -77,7 +101,7 @@ export default function RezervacijaForm({ salaId, salaNaziv,kapacitet,onCancel }
       });
 
       if (!odgovor.ok) {
-        console.error("Greška prilikom pamćenja rezervacije");
+        alert((await odgovor.json()).error);
         return;
       }
 
@@ -191,14 +215,14 @@ export default function RezervacijaForm({ salaId, salaNaziv,kapacitet,onCancel }
           <button
             type="button"
             onClick={onCancel}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition"
+            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-[#FFCF71] transition"
           >
             Otkaži
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded-md hover:bg-[#FFCF71] transition"
           >
             Rezerviši
           </button>

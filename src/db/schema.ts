@@ -64,7 +64,7 @@ export const Dogadjaj=pgTable("dogadjaj",{
 });
 
 export const Rezervacija=pgTable("rezervacija",{
-    idRezervacije:uuid("idReezrvacija").primaryKey().defaultRandom(),
+    idRezervacije:uuid("idRezrvacija").primaryKey().defaultRandom(),
     napomena:varchar("napomena",{length:100}),
     pocetak:timestamp("pocetak").notNull(),
     kraj:timestamp("kraj").notNull(),
@@ -80,7 +80,7 @@ export const Rezervacija=pgTable("rezervacija",{
 
 export const Recenzija=pgTable("recenzija",{
     idRezervacija:uuid("idRezervacija").notNull().references(()=>Rezervacija.idRezervacije),
-    idRecenzije:uuid("idRecenzije").notNull(),
+    idRecenzije:uuid("idRecenzije").notNull().defaultRandom(),
     ocena:doublePrecision("ocena").notNull(),
     komentar:varchar("komentar",{length:3000}),
     createdAt: timestamp("created_at").defaultNow(),

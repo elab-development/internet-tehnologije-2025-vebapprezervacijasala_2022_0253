@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { Oprema, Rezervacija, Sala, SalaOprema, TipSale } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -63,15 +63,15 @@ export async function GET(req: NextRequest) {
        if(tipParam){
          rezultat=rezultat.filter(s=>s.tipSale===tipParam);
     }
-    const rezervacije=await db.select().from(Rezervacija);
+    const rezervacije=await db.select().from(Rezervacija).where(inArray(Rezervacija.status,["aktuelno","izmenjeno"]));
     if(pocetakParam && zavrsetakParama){
-        const start = new Date(pocetakParam+":00Z");
+        const start = new Date(pocetakParam);
         
-        const end = new Date(zavrsetakParama+":00Z");
+        const end = new Date(zavrsetakParama);
         const rezervacijeIds=rezervacije.
         filter(r=>{
-            const pocetak=new Date(r.pocetak);
-            const kraj=new Date(r.kraj);
+            const pocetak=r.pocetak;
+            const kraj=r.kraj;
             return start<kraj && end>pocetak;
         }).map(r=>r.salaId);
 
