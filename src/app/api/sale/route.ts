@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 
         let rezultat = Array.from(map.values());
          if(kapacitet!==-1){
-          rezultat=rezultat.filter(s=>s.kapacitet===kapacitet);
+          rezultat=rezultat.filter(s=>s.kapacitet<=kapacitet);
     }
 
        if(tipParam){

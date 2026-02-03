@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { Rezervacija } from "@/db/schema";
 import { cookies } from "next/headers";
 import { verifikujToken } from "@/lib/auth";
-import { and, lte, gte, eq } from "drizzle-orm";
+import { and, lte, gte, eq, inArray } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,7 +30,8 @@ export async function POST(req: NextRequest) {
         and(
           eq(Rezervacija.salaId, salaId),
           lte(Rezervacija.pocetak, end),
-          gte(Rezervacija.kraj, start)
+          gte(Rezervacija.kraj, start),
+          eq(Rezervacija.status,"aktuelno")
         )
       );
 

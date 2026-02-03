@@ -30,7 +30,7 @@ console.log(user?.role);
                     </Link>)}
 
                 {user?.role === "admin" && (
-                    <Link href="/admin/dashboard"
+                    <Link href="/dashboard"
                         className="text-[#7B542F] hover:text-[#B6771D] transition"> {/* Ovde treba izmeniti putanju kada se dodje do tog dela*/}
                         Admin panel
                     </Link>)}
