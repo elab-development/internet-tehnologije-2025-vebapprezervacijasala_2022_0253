@@ -8,12 +8,11 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params; // ✅ OVO JE KLJUČ
+    const { id } = await params; 
     const salaId = id;
 
     
 
-    // 1. Provera da li postoji aktivna rezervacija za tu salu
     const aktivneRezervacije = await db
       .select({ id: Rezervacija.idRezervacije})
       .from(Rezervacija)

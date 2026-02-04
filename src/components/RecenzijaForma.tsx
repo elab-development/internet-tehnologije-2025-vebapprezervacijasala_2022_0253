@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Button from "./Button";
 
 export default function RecenzijaForma({
   rezervacijaId,
@@ -55,18 +56,10 @@ export default function RecenzijaForma({
       />
 
       <div className="mt-3 flex gap-2">
-        <button
-          onClick={submit}
-          className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded hover:bg-[#FFCF71]"
-        >
-          Sačuvaj
-        </button>
-        <button
-          onClick={onClose}
-          className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded hover:bg-[#FFCF71]"
-        >
-          Otkaži
-        </button>
+      
+        <Button tekst="Sačuvaj" onClick={submit} />
+                <Button tekst="Otkaži" onClick={onClose} />
+
       </div>
     </div>
   );

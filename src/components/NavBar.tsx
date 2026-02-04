@@ -3,20 +3,17 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthProvider";
+import Button from "./Button";
 
 
-/*bojezelena #47510B butter #FDFAD8 
-seedgreen #CAD23C 
-borda #AB1717 pink #FFB6A9 */
 
-/* */
 
 export default function NavBar() {
     const { user, logout } = useAuth();
-console.log(user?.role);
+    console.log(user?.role);
     return (
 
-        
+
         <nav className="w-full bg-[#FFCF71] shadow-md px-8 py-4 flex items-center justify-between ">
             <div className="text-xl font-bold text-[#7B542F]">
                 <Link href="/">Moja Sala</Link>
@@ -39,18 +36,14 @@ console.log(user?.role);
                     <>
 
                         <Link href="/registracija">
-                            {/* rounded-md – srednje zaobljeni uglovi (border-radius) */}
-                            <button className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded-md hover:bg-[#FFCF71] transition ">
-                                Registracija
-                            </button>
+                            
+                            <Button tekst="Registracija" />
                         </Link>
 
 
                         <Link href="/login">
-                            {/* rounded-md – srednje zaobljeni uglovi (border-radius) */}
-                            <button className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded-md hover:bg-[#FFCF71] transition ">
-                                Prijava
-                            </button>
+                            
+                            <Button tekst="Prijava" />
                         </Link>
                     </>) : (
                     <>
@@ -58,15 +51,19 @@ console.log(user?.role);
                             👋 {user.name}
                         </span>
 
-                        <button
-                            className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded-md hover:bg-[#FFCF71] transition"
+                        <Button
+                            tekst="Logout"
                             onClick={async () => {
-                                await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
-                                logout(); // globalni state → dugmad nestaju svuda
+                                await fetch("/api/auth/logout", {
+                                    method: "POST",
+                                    credentials: "include",
+                                });
+                                logout();
                             }}
-                        >
-                            Logout
-                        </button>
+                        />
+
+
+                        
                     </>)}
             </div>
 

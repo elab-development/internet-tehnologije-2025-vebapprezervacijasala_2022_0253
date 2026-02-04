@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import Button from "./Button";
 type Sala={
     id:string;
     naziv:string;

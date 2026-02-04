@@ -7,6 +7,7 @@ type FormFieldProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   min?: string | number;
+  required?:boolean;
 };
 
 export default function FormField({
@@ -16,6 +17,7 @@ export default function FormField({
   onChange,
   placeholder,
   min,
+  required=false,
 }: FormFieldProps) {
   return (
     <div className="flex flex-col gap-1">
@@ -26,6 +28,7 @@ export default function FormField({
         value={value}
         placeholder={placeholder}
         min={min}
+        required={required}
         onChange={(e) => onChange(e.target.value)}
         className="w-full p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
       />

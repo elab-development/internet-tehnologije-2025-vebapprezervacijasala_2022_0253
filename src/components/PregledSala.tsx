@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import RezervacijaForm from "./RezervacijaForma";
+import Button from "./Button";
 
 
 /*
@@ -23,7 +24,7 @@ type SalaDTO = {
   naziv: string;
   kapacitet: number;
   sprat: number;
-  urlSlike:string;
+  urlSlike: string;
   oprema: OpremaDTO[];
 };
 
@@ -35,9 +36,9 @@ type PregledSalaProps = {
 
 
 export default function PregledSala({ sale }: PregledSalaProps) {
- const { user } = useAuth();
- const [selektovanaSala,setSelektovanaSala]=useState<SalaDTO | null>(null);
-const[prikaziFormu,setPrikaziFormu]=useState(false);
+  const { user } = useAuth();
+  const [selektovanaSala, setSelektovanaSala] = useState<SalaDTO | null>(null);
+  const [prikaziFormu, setPrikaziFormu] = useState(false);
 
   return (
     <section className="px-8 py-12 bg-[#7B542F]">
@@ -52,7 +53,7 @@ const[prikaziFormu,setPrikaziFormu]=useState(false);
             <div className="relative h-48 w-full">
               <Image
                 src={sala.urlSlike}
-                
+
                 alt={"Slika sale"}
                 fill
                 className="object-cover"
@@ -78,34 +79,38 @@ const[prikaziFormu,setPrikaziFormu]=useState(false);
                 </ul>
               )}
             </div>
-<br></br>
-{user && (
-            <button
-               onClick={() => {setSelektovanaSala(sala);
-                setPrikaziFormu(true);
-               }
-               } 
-              className="mt-auto bg-[#7B542F] text-[#B6771D] py-2 px-4 rounded-md hover:bg-[#FFCF71] text-center transition"
-            >
-              Rezerviši
-            </button>
-)}
+            <br></br>
+          
+    {user && (
+              <div className="mt-auto">
+                <Button
+                  tekst="Rezerviši"
+                  onClick={() => {
+                    setSelektovanaSala(sala);
+                    setPrikaziFormu(true);
+                  }}
+
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>
+        
 
-{/* Modal sa formom */}
-      {selektovanaSala && prikaziFormu && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <RezervacijaForm
-            salaId={selektovanaSala.id}
-            salaNaziv={selektovanaSala.naziv}
-            kapacitet={selektovanaSala.kapacitet}
-            onCancel={() => setPrikaziFormu(false)} 
-          />
-        </div>
-      )}
 
-    </section>
-  );
+            {/* Modal sa formom */}
+            {selektovanaSala && prikaziFormu && (
+              <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+                <RezervacijaForm
+                  salaId={selektovanaSala.id}
+                  salaNaziv={selektovanaSala.naziv}
+                  kapacitet={selektovanaSala.kapacitet}
+                  onCancel={() => setPrikaziFormu(false)}
+                />
+              </div>
+            )}
+
+          </section>
+        );
 }

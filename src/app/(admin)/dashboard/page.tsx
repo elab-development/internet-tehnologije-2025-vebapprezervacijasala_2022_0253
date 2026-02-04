@@ -95,7 +95,7 @@ export default function AdminDashboard() {
                 <td className="border px-4 py-2">{r.naziv}</td>
                 <td className="border px-4 py-2">{new Date(r.pocetak).toLocaleString()}</td>
                 <td className="border px-4 py-2">{new Date(r.kraj).toLocaleString()}</td>
-                <td className={`border px-4 py-2 text-[#7B542F]  text-center rounded ${r.status === "aktuelno" ? "bg-green-500" : r.status === "otkazano" ? "bg-red-500" : "bg-gray-500"}`}>
+                <td className={`border px-4 py-2 text-[#FFCF71]  text-center rounded ${r.status === "aktuelno" ? "bg-[#748B6F]" : r.status === "otkazano" ? "bg-[#D05663]" : "bg-[#2A403D]"}`}>
                   {r.status}
                 </td>
               </tr>

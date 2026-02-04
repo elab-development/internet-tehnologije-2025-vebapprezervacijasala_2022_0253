@@ -11,13 +11,15 @@ export default function ImageSelector({ value, onChange }: ImageSelectorProps) {
   const [images, setImages] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
-  // U praksi, ovo može da dolazi iz API-ja koji čita folder /public/images/sale
+
   useEffect(() => {
-    // Pretpostavimo da ove slike postoje u public/images/sale
+
     setImages([
       "/ucionica1.jpeg",
       "/ucionica2.jpeg",
-     
+      "/konferencijska1.jpeg",
+      "/konferencijska2.jpeg"
+
     ]);
   }, []);
 

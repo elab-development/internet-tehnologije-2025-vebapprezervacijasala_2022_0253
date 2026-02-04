@@ -6,7 +6,7 @@ type ButtonProps={
 }
 
 export default function Button({tekst,onClick,type="button",disabled=false}:ButtonProps){
-    const style="w-full bg-[#7B542F] text-[#FFCF71] py-3 rounded-md font-medium hover:bg-blue-700 transition"
+    const style=" bg-[#B6771D] text-[#7B542F] py-3 rounded-md font-medium hover:bg-[#FFCF71] transition px-4"
     return(
         <button
         type={type}

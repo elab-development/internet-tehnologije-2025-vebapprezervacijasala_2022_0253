@@ -11,19 +11,19 @@ export default function AdminLayout({ children }:{children:React.ReactNode}) {
         <nav className="flex-1">
           <ul className="space-y-2 px-4">
             <li>
-              <Link href="/dashboard" className="block py-2 px-3 rounded hover:bg-blue-600">Dashboard</Link>
+              <Link href="/dashboard" className="block py-2 px-3 rounded hover:bg-[#B6771D]">Dashboard</Link>
             </li>
             <li>
-              <Link href="/sale" className="block py-2 px-3 rounded hover:bg-blue-600">Sale</Link>
+              <Link href="/sale" className="block py-2 px-3 rounded hover:bg-[#B6771D]">Sale</Link>
             </li>
             <li>
-              <Link href="/rezervacije" className="block py-2 px-3 rounded hover:bg-blue-600">Rezervacije</Link>
+              <Link href="/rezervacije" className="block py-2 px-3 rounded hover:bg-[#B6771D]">Rezervacije</Link>
             </li>
             <li>
-              <Link href="/admin/korisnici" className="block py-2 px-3 rounded hover:bg-blue-600">Korisnici</Link>
+              <Link href="/admin/korisnici" className="block py-2 px-3 rounded hover:bg-[#B6771D]">Korisnici</Link>
             </li>
             <li>
-              <Link href="/admin/podesavanja" className="block py-2 px-3 rounded hover:bg-blue-600">Podešavanja</Link>
+              <Link href="/admin/podesavanja" className="block py-2 px-3 rounded hover:bg-[#B6771D]">Podešavanja</Link>
             </li>
           </ul>
         </nav>

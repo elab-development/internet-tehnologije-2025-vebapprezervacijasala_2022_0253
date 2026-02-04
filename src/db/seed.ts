@@ -76,7 +76,7 @@ await db.transaction(async (tx) => {
         },
 
 
-    ])*/
+    ])*//*
      await tx.insert(SalaOprema).values([
         {
             salaId: "5e51614c-ceee-40fd-846a-91d862da317c",
@@ -109,8 +109,120 @@ await db.transaction(async (tx) => {
         },
 
 
-    ])
+    ])*/
+  /*  await tx.insert(korisnik).values([
+        {
+            idKorisnik: "7b5591f9-02fc-4c9c-a3ca-48dd2a570989",
+            name: "andrijana",
+            email: "andri@gmail.com",
+            passHash: hash,
+            idUloga: "1a532d97-2a35-4884-93f0-63c1f3723786"
 
+        },
+
+
+    ])*/
+   /* await tx.insert(Oprema).values([
+        {
+            id: "6e0f4d04-9138-4474-a146-2e9ff1b226f4",
+            nazivOpreme:"TV",
+            opisOpreme:"TOP",
+            
+        },
+
+
+    ])
+     await tx.insert(Oprema).values([
+        {
+            id: "911f51a9-465e-455f-900f-6b49e68e0f99",
+            nazivOpreme:"Pametna tabla",
+            opisOpreme:"TOP",
+            
+        },
+
+
+    ])*//*
+   await tx.insert(TipSale).values([
+        {
+            id: "43175ccb-e658-4afa-8b32-90b0f0990c38",
+            opis: "bez opisa",
+            naziv: "Konferencijska sala",
+            minKapacitet: 10
+
+
+        },
+
+
+    ])*//*
+   await tx.insert(Sala).values([
+        {
+            id: "4f390749-da6b-4757-a173-14d0d2a0c099",
+            naziv: "Konferencijska sala 1",
+            kapacitet: 20,
+            sprat: 2,
+            idTipaSale: "43175ccb-e658-4afa-8b32-90b0f0990c38",
+            urlSlike:"/konferencijska1.jpeg"
+
+        },
+
+
+    ])
+    await tx.insert(Sala).values([
+        {
+            id: "17d6e2ef-f75f-4079-810e-9b9fdfc4c549",
+            naziv: "Konferencijska sala 2",
+            kapacitet: 50,
+            sprat: 2,
+            idTipaSale: "43175ccb-e658-4afa-8b32-90b0f0990c38",
+            urlSlike:"/konferencijska2.jpeg"
+        },
+
+
+    ])*/
+ await tx.insert(SalaOprema).values([
+        {
+            salaId: "17d6e2ef-f75f-4079-810e-9b9fdfc4c549",
+            opremaId:"911f51a9-465e-455f-900f-6b49e68e0f99",
+            kolicina:1
+            
+            
+        },
+
+
+    ])
+    await tx.insert(SalaOprema).values([
+        {
+            salaId: "4f390749-da6b-4757-a173-14d0d2a0c099",
+            opremaId:"911f51a9-465e-455f-900f-6b49e68e0f99",
+            kolicina:1
+            
+            
+        },
+
+
+    ])
+    await tx.insert(SalaOprema).values([
+        {
+            salaId: "17d6e2ef-f75f-4079-810e-9b9fdfc4c549",
+            opremaId:"46fae041-3c48-4dd7-8553-525a9446ae21",
+            kolicina:50
+            
+            
+        },
+
+
+    ])
+    await tx.insert(SalaOprema).values([
+        {
+            salaId: "4f390749-da6b-4757-a173-14d0d2a0c099",
+            opremaId:"911f51a9-465e-455f-900f-6b49e68e0f99",
+            kolicina:20
+            
+            
+        },
+
+
+    ])
 })
 
 

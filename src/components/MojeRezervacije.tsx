@@ -3,15 +3,16 @@
 import { useState, useEffect } from "react";
 import RecenzijaForma from "./RecenzijaForma";
 import RezervacijaForm from "./RezervacijaForma";
+import Button from "./Button";
 
 
 type Rezervacija = {
-    
-   id: string;
-   salaNaziv: string;
-   pocetak: string;
-   kraj: string;
-   status: "aktuelno" | "otkazano" | "zavrsena" | "izmenjena";
+
+  id: string;
+  salaNaziv: string;
+  pocetak: string;
+  kraj: string;
+  status: "aktuelno" | "otkazano" | "zavrsena" | "izmenjena";
 
 
 
@@ -103,13 +104,14 @@ export default function MojeRezervacije() {
             </div>
           )}
 
-          {/* Ako je završena, opcija recenzije */}
+
           {r.status === "zavrsena" && (
-            <button className="mt-4 bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded hover:bg-[#FFCF71]"
+
+            < Button
+              tekst="Recenzija"
               onClick={() => setRecenzijaForma(r.id)}
-            >
-              Recenzija
-            </button>
+            />
+
           )}
 
 
@@ -123,7 +125,7 @@ export default function MojeRezervacije() {
           )}
         </div>
       ))}
-     
+
     </div>
   );
 }

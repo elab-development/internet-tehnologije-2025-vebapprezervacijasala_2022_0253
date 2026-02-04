@@ -3,12 +3,13 @@
 import { date } from "drizzle-orm/mysql-core";
 import { useEffect, useState } from "react";
 import FormField from "./FormField";
+import Button from "./Button";
 
 type RezervacijaFormProps = {
   salaId: string;
   salaNaziv: string;
-  kapacitet:number;
-  onCancel?: () => void; 
+  kapacitet: number;
+  onCancel?: () => void;
 };
 /*
 type RezervacijaFormProps = {
@@ -30,13 +31,13 @@ kapacitet:number;
 };
 
 */
-type Dogadjaj={
-    idDogadjaj:string;
-    nazivDogadjaja:string;
+type Dogadjaj = {
+  idDogadjaj: string;
+  nazivDogadjaja: string;
 };
 
-export default function RezervacijaForm({ salaId,salaNaziv,kapacitet,onCancel }: RezervacijaFormProps) {
- const [datumPocetka, setDatumPocetka] = useState("");
+export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel }: RezervacijaFormProps) {
+  const [datumPocetka, setDatumPocetka] = useState("");
   const [datumKraj, setDatumKraj] = useState("");
   const [viseDana, setViseDana] = useState(false);
   const [vremePocetka, setVremePocetka] = useState("");
@@ -48,44 +49,44 @@ export default function RezervacijaForm({ salaId,salaNaziv,kapacitet,onCancel }:
 
 
   // const[dogadjaji,setDogadjaji]=useState<Dogadjaj[]>([]);
-   ///const[selektovaniDogadjaj,setSelektovaniDogadjaj]=useState<string>("");
- /*useEffect(()=>{
-      async function fetchDogadjaji() {
-        
-             try {
-      const res = await fetch("/api/dogadjaji");
-      const data = await res.json();
-      setDogadjaji(data);
-      console.log(dogadjaji);
-    } catch (err) {
-      console.error("Greška pri učitavanju tipova sala", err);
-    }}
-        
-      fetchDogadjaji();
-
-
-
-    },[]);*/
+  ///const[selektovaniDogadjaj,setSelektovaniDogadjaj]=useState<string>("");
+  /*useEffect(()=>{
+       async function fetchDogadjaji() {
+         
+              try {
+       const res = await fetch("/api/dogadjaji");
+       const data = await res.json();
+       setDogadjaji(data);
+       console.log(dogadjaji);
+     } catch (err) {
+       console.error("Greška pri učitavanju tipova sala", err);
+     }}
+         
+       fetchDogadjaji();
+ 
+ 
+ 
+     },[]);*/
 
 
   const handleSubmit = async () => {
     // osnovne provere
-    if (!datumPocetka || !vremePocetka || !vremeKraja || brojUcesnika === "" ) {
-        console.log(datumPocetka,vremeKraja,vremePocetka,brojUcesnika);
+    if (!datumPocetka || !vremePocetka || !vremeKraja || brojUcesnika === "") {
+      console.log(datumPocetka, vremeKraja, vremePocetka, brojUcesnika);
       alert("Popunite sva obavezna polja!");
       return;
     }
 
-    if(brojUcesnika>kapacitet){
-        alert("Premasili ste kapacitet sale!");
+    if (brojUcesnika > kapacitet) {
+      alert("Premasili ste kapacitet sale!");
       return;
     }
 
-   
+
     const payload = {
       salaId,
       datumPocetka,
-       datumKraj: viseDana ? datumKraj : datumPocetka,
+      datumKraj: viseDana ? datumKraj : datumPocetka,
       vremePocetka,
       vremeKraja,
       brojUcesnika,
@@ -106,14 +107,14 @@ export default function RezervacijaForm({ salaId,salaNaziv,kapacitet,onCancel }:
       }
 
       alert("Rezervacija je uspešno sačuvana!");
-     
+
       setDatumPocetka("");
       setDatumKraj("");
       setVremePocetka("");
       setVremeKraja("");
       setBrojUcesnika("");
       setNapomena("");
-    
+
     } catch (error) {
       console.error("Greška prilikom upisa podataka u bazu", error);
     }
@@ -123,111 +124,108 @@ export default function RezervacijaForm({ salaId,salaNaziv,kapacitet,onCancel }:
     <div className="p-6 bg-white rounded-2xl shadow-md w-full max-w-md mx-auto">
       <h2 className="text-xl font-bold mb-6 text-center">Rezerviši salu: {salaNaziv}</h2>
 
-      <FormField label="Od:" type="date" value={datumPocetka} onChange={setDatumPocetka}   />
+      <FormField label="Od:"
+        type="date"
+        value={datumPocetka}
+        onChange={setDatumPocetka}
+        required
+      />
 
-          {/* Toggle za više dana */}
-         <div className="flex items-center gap-2">
+      {/* Toggle za više dana */}
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={viseDana}
+          onChange={() => setViseDana(!viseDana)}
+          id="viseDana"
+        />
+        <label htmlFor="viseDana" className="text-gray-700">Više dana</label>
+      </div>
+
+      {/* Datum kraja */}
+      {viseDana && (<div className="flex flex-col">
+     
+        <FormField
+          label="Do:"
+          type="date"
+          value={datumKraj}
+          min={datumPocetka}
+          onChange={setDatumKraj}
+          required
+        />
+
+      </div>)}
+
+      {/* Vremenski interval */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-gray-700">Vreme:</label>
+        <div className="flex gap-2">
           <input
-            type="checkbox"
-            checked={viseDana}
-            onChange={() => setViseDana(!viseDana)}
-            id="viseDana"
-          />
-          <label htmlFor="viseDana" className="text-gray-700">Više dana</label>
-        </div>
+            type="time"
 
-        {/* Datum kraja */}
-       {viseDana &&( <div className="flex flex-col">
-          <label className="mb-1 font-medium text-gray-700">Do:</label>
-          <input
-            type="date"
-            value={datumKraj}
-            min={datumPocetka}
-            disabled={!datumPocetka}
-            onChange={(e) => setDatumKraj(e.target.value)}
-            className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D] disabled:bg-gray-100"
-          />
-        </div>)}
+            value={vremePocetka}
+            onChange={(e) => setVremePocetka(e.target.value)}
 
-        {/* Vremenski interval */}
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium text-gray-700">Vreme:</label>
-          <div className="flex gap-2">
-            <input
-              type="time"
-             
-              value={vremePocetka}
-              onChange={(e) => setVremePocetka(e.target.value)}
-              
-              className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
-              placeholder="Početak"
-            />
-            <input
-              type="time"
-              value={vremeKraja}
-              
-              onChange={(e) => setVremeKraja(e.target.value)}
-               
-              className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
-              placeholder="Kraj"
-            />
-          </div>
-        </div>
-
-        {/* Broj učesnika */}
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium text-gray-700">Broj učesnika:</label>
-          <input
-            type="number"
-           // min={1}
-            value={brojUcesnika}
-          //  onChange={(e) => setBrojUcesnika(parseInt(e.target.value))}
-           onChange={(e) => {
-    const val = e.target.value;
-    setBrojUcesnika(val === "" ? "" : Number(val));}}
             className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
+            placeholder="Početak"
           />
-        </div>
+          <input
+            type="time"
+            value={vremeKraja}
 
-        {/* Napomena */}
-        <div className="flex flex-col">
-          <label className="mb-1 font-medium text-gray-700">Napomena:</label>
-          <textarea
-            value={napomena}
-            onChange={(e) => setNapomena(e.target.value)}
+            onChange={(e) => setVremeKraja(e.target.value)}
+
             className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
-            placeholder="Opcionalno"
+            placeholder="Kraj"
           />
-        </div>
- {/* <select
-    value={selektovaniDogadjaj}
-  onChange={(e) => setSelektovaniDogadjaj(e.target.value)}
-  className="p-3 text-[#FFCF71] rounded-md border border-[#7B542F] focus:outline-none focus:ring-2 focus:ring-[#FF9D00]"
->
-  <option value="">Svi dogadjaji</option>
-  {dogadjaji.map((dogadjaj) => (
-    <option key={dogadjaj.idDogadjaj} value={dogadjaj.idDogadjaj}>
-      {dogadjaj.nazivDogadjaja}
-    </option>
-  ))}</select>*/}
-        {/* Dugmad */}
-        <div className="flex justify-end gap-3 mt-4">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-[#FFCF71] transition"
-          >
-            Otkaži
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded-md hover:bg-[#FFCF71] transition"
-          >
-            Rezerviši
-          </button>
         </div>
       </div>
-    
+
+      {/* Broj učesnika */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-gray-700">Broj učesnika:</label>
+        <input
+          type="number"
+          // min={1}
+          value={brojUcesnika}
+          //  onChange={(e) => setBrojUcesnika(parseInt(e.target.value))}
+          onChange={(e) => {
+            const val = e.target.value;
+            setBrojUcesnika(val === "" ? "" : Number(val));
+          }}
+          className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
+        />
+      </div>
+
+      {/* Napomena */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-gray-700">Napomena:</label>
+        <textarea
+          value={napomena}
+          onChange={(e) => setNapomena(e.target.value)}
+          className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
+          placeholder="Opcionalno"
+        />
+      </div>
+     
+      {/* Dugmad */}
+      <div className="flex justify-end gap-3 mt-4">
+
+        <Button
+          tekst="Otkaži"
+          type="button"
+          onClick={onCancel}
+        />
+
+
+        <Button
+          tekst="Rezerviši"
+          type="button"
+          onClick={handleSubmit}
+        />
+
+      </div>
+    </div>
+
   );
 }
