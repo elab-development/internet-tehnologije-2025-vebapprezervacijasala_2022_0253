@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { korisnik } from "@/db/schema";
+import { korisnik,Uloga } from "@/db/schema";
 import {AUTH_COOKIE, cookieOpts, generisiToken} from "@/lib/auth";
 import { error } from "console";
 import { NextResponse } from "next/server";
@@ -19,7 +19,15 @@ export async  function POST(req:Request){
         )
      }
 
-     const[u]=await db.select().from(korisnik).where(eq(korisnik.email,email));
+     const[u]=await db.select(
+        {
+            idKorisnik:korisnik.idKorisnik,
+            name:korisnik.name,
+            email:korisnik.email,
+            passHash:korisnik.passHash,
+            nazivUloge:Uloga.nazivUloge
+        }
+     ).from(korisnik).leftJoin(Uloga,eq(korisnik.idUloga,Uloga.idUloge)).where(eq(korisnik.email,email));
      if(!u){
         return NextResponse.json({error:"Pogresam email ili lozinka"},
             {status:401}
@@ -34,8 +42,8 @@ export async  function POST(req:Request){
         )
      }
      //ako je pronasao korisnika generisi token
-     const token=generisiToken({sub:u.idKorisnik,email:u.email,name:u.name});
-     const odgovor=NextResponse.json({id:u.idKorisnik,name:u.name,email:u.email});
+     const token=generisiToken({sub:u.idKorisnik,email:u.email,name:u.name,role:u.nazivUloge ?? "user"});
+     const odgovor=NextResponse.json({id:u.idKorisnik,name:u.name,email:u.email,role:u.nazivUloge});
      odgovor.cookies.set(AUTH_COOKIE,token,cookieOpts())
      return odgovor;
 }

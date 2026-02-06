@@ -10,6 +10,7 @@ export type JwtUserClaims = {
     sub: string;
     email: string;
     name?: string;
+    role?:string;
 }
 
 export function generisiToken(claims: JwtUserClaims) {
@@ -25,7 +26,8 @@ export function verifikujToken(token: string): JwtUserClaims {
     return {
         sub: payload.sub,
         email: payload.email,
-        name: payload.name
+        name: payload.name,
+        role:payload.role
     }
 
 }

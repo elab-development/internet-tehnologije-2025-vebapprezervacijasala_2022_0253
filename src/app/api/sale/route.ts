@@ -59,11 +59,7 @@ export async function GET(req: NextRequest) {
          if(kapacitet!==-1){
           rezultat=rezultat.filter(s=>s.kapacitet<=kapacitet);
     }
-
-       if(tipParam){
-         rezultat=rezultat.filter(s=>s.tipSale===tipParam);
-    }
-    const rezervacije=await db.select().from(Rezervacija).where(inArray(Rezervacija.status,["aktuelno","izmenjeno"]));
+const rezervacije=await db.select().from(Rezervacija).where(inArray(Rezervacija.status,["aktuelno","izmenjeno"]));
     if(pocetakParam && zavrsetakParama){
         const start = new Date(pocetakParam);
         
@@ -77,6 +73,10 @@ export async function GET(req: NextRequest) {
 
         rezultat=rezultat.filter(r=>!rezervacijeIds.includes(r.id));
     }
+       if(tipParam){
+         rezultat=rezultat.filter(s=>s.tipSale===tipParam);
+    }
+    
         return NextResponse.json(rezultat);
         //return NextResponse.json(sale);
 

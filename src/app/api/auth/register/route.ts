@@ -39,7 +39,7 @@ export async function POST(req:Request){
     values({name,email,passHash, idUloga:userRole.id}).
     returning({id:korisnik.idKorisnik, name:korisnik.name,email:korisnik.email});
 
-    const token=generisiToken({sub:u.id,email:u.email,name:u.name});
+    const token=generisiToken({sub:u.id,email:u.email,name:u.name,role:"user"});
       const res = NextResponse.json(u)
     res.cookies.set(AUTH_COOKIE, token, cookieOpts())
 
