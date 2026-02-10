@@ -4,6 +4,7 @@ import { Rezervacija, Sala } from "@/db/schema";
 import { cookies } from "next/headers";
 import { and, lte, gte, eq, lt } from "drizzle-orm";
 import { verifikujToken } from "@/lib/auth";
+
 export async function GET(req: NextRequest) {
     try {
         // 1. Uzmi token korisnika iz cookie-ja
@@ -11,12 +12,15 @@ export async function GET(req: NextRequest) {
         if (!token) return NextResponse.json({ error: "Niste ulogovani" }, { status: 401 });
 
         const korisnik = verifikujToken(token);
+
         const sada = new Date();
-        console.log(sada);
+        console.log(sada); //pre nego sto dovucemo sve rezervacije setujemo status na one koje su zavrsene
+        //sub smo definisali kod ClaimsUser-a 
         await db.update(Rezervacija).set({
-            status: "zavrsena"
+            status: "zavrsena"              
         }).where(and(eq(Rezervacija.KorisnikId, korisnik.sub), eq(Rezervacija.status, "aktuelno"), lt(Rezervacija.kraj, sada)));
-        // 2. Povuci sve rezervacije za tog korisnika
+                                                                //jednako                           less than gde je kraj prosao
+        // 2. Povuci sve rezervacije za tog korisnika          
         const rezervacije = await db
             .select(
                 {
@@ -27,7 +31,7 @@ export async function GET(req: NextRequest) {
                     status: Rezervacija.status
                 }
             )
-            .from(Rezervacija).leftJoin(Sala, eq(Sala.id, Rezervacija.salaId))
+            .from(Rezervacija).leftJoin(Sala, eq(Sala.id, Rezervacija.salaId)) //izvlacimo sve rezervacije za korisnika iz tokena
             .where(eq(Rezervacija.KorisnikId, korisnik.sub));
           
 
@@ -40,7 +44,7 @@ export async function GET(req: NextRequest) {
             status: r.status, // AKTIVNA, OTKAZANA, ZAVRSENA
         }));
 
-        return NextResponse.json(response);
+        return NextResponse.json(response);//vracamo ih kao json
     } catch (error) {
         console.error("Greška pri dohvatanju rezervacija:", error);
         return NextResponse.json(

@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { Sala, Rezervacija } from "@/db/schema";
 
 import { and, lte, gte, eq, lt } from "drizzle-orm";
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -11,7 +12,9 @@ export async function DELETE(
     const { id } = await params; 
     const salaId = id;
 
-    
+    //za brisanje sale
+
+    //proveravamo da li ima aktuelne rezervacije
 
     const aktivneRezervacije = await db
       .select({ id: Rezervacija.idRezervacije})
@@ -30,7 +33,7 @@ export async function DELETE(
       );
     }
 
-    // 2. Brisanje sale
+    // 2. Brisanje sale ako nema rezervacije koje su aktuelne
     await db.delete(Sala).where(eq(Sala.id, salaId));
 
     return NextResponse.json({ ok: true });

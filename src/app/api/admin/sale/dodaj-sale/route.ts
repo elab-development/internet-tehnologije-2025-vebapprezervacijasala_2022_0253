@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "Kapacitet mora biti veći od 0" },
         { status: 400 }
+        
       );
     }
 

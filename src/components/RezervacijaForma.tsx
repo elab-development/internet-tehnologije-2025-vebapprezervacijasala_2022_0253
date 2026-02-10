@@ -5,32 +5,13 @@ import { useEffect, useState } from "react";
 import FormField from "./FormField";
 import Button from "./Button";
 
-type RezervacijaFormProps = {
+type RezervacijaFormProps = {//za popunjavanje podatka i izlaz iz forme
   salaId: string;
   salaNaziv: string;
   kapacitet: number;
-  onCancel?: () => void;
-};
-/*
-type RezervacijaFormProps = {
-  rezervacija?: {
-    id: string;
-    salaId: string;
-    salaNaziv: string;
-
-    datumPocetka: string;
-    datumKraj: string;
-    vremePocetka: string;
-    vremeKraja: string;
-kapacitet:number;
-    brojUcesnika: number;
-    napomena: string;
-  };
-  onClose: () => void;
-  onSaved: () => void;
+  onCancel?: () => void;//moze da se prosledi a i ne mora to znaci ?
 };
 
-*/
 type Dogadjaj = {
   idDogadjaj: string;
   nazivDogadjaja: string;
@@ -42,10 +23,10 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
   const [viseDana, setViseDana] = useState(false);
   const [vremePocetka, setVremePocetka] = useState("");
   const [vremeKraja, setVremeKraja] = useState("");
-  const [brojUcesnika, setBrojUcesnika] = useState<number | "">("");
+  const [brojUcesnika, setBrojUcesnika] = useState<number | "">(""); //ili broj ili prazan string
   const [napomena, setNapomena] = useState("");
 
-
+// stanja za atribute rezervacije
 
 
   // const[dogadjaji,setDogadjaji]=useState<Dogadjaj[]>([]);
@@ -73,7 +54,7 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
     // osnovne provere
     if (!datumPocetka || !vremePocetka || !vremeKraja || brojUcesnika === "") {
       console.log(datumPocetka, vremeKraja, vremePocetka, brojUcesnika);
-      alert("Popunite sva obavezna polja!");
+      alert("Popunite sva obavezna polja!");//required
       return;
     }
 
@@ -83,7 +64,7 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
     }
 
 
-    const payload = {
+    const payload = { //sta saljemo, sve sto smo pokupili iz polja
       salaId,
       datumPocetka,
       datumKraj: viseDana ? datumKraj : datumPocetka,
@@ -93,7 +74,7 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
       napomena,
     };
 
-    try {
+    try {//saljemo zahtev za upis rezervacije u bazu
       const odgovor = await fetch("/api/rezervacija", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,13 +83,13 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
       });
 
       if (!odgovor.ok) {
-        alert((await odgovor.json()).error);
+        alert((await odgovor.json()).error); //ispisuje odgovor koji mu salje api
         return;
       }
 
       alert("Rezervacija je uspešno sačuvana!");
 
-      setDatumPocetka("");
+      setDatumPocetka("");//resetujemo polja 
       setDatumKraj("");
       setVremePocetka("");
       setVremeKraja("");
@@ -120,11 +101,11 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
     }
   };
 
-  return (
+  return (//izgled forme 
     <div className="p-6 bg-white rounded-2xl shadow-md w-full max-w-md mx-auto">
       <h2 className="text-xl font-bold mb-6 text-center">Rezerviši salu: {salaNaziv}</h2>
 
-      <FormField label="Od:"
+      <FormField label="Od:" //reusable komponenta FormField
         type="date"
         value={datumPocetka}
         onChange={setDatumPocetka}
@@ -136,7 +117,7 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
         <input
           type="checkbox"
           checked={viseDana}
-          onChange={() => setViseDana(!viseDana)}
+          onChange={() => setViseDana(!viseDana)} 
           id="viseDana"
         />
         <label htmlFor="viseDana" className="text-gray-700">Više dana</label>
@@ -191,7 +172,7 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
           //  onChange={(e) => setBrojUcesnika(parseInt(e.target.value))}
           onChange={(e) => {
             const val = e.target.value;
-            setBrojUcesnika(val === "" ? "" : Number(val));
+            setBrojUcesnika(val === "" ? "" : Number(val));//stavili smo da je ili broj ili prazans string
           }}
           className="p-3 border border-[#7B542F] rounded-md focus:outline-none focus:ring-2 focus:ring-[#B6771D]"
         />
@@ -214,7 +195,7 @@ export default function RezervacijaForm({ salaId, salaNaziv, kapacitet, onCancel
         <Button
           tekst="Otkaži"
           type="button"
-          onClick={onCancel}
+          onClick={onCancel}//onCancel je prosledjeno od strane roditelja
         />
 
 

@@ -7,18 +7,19 @@ import { verifikujToken } from "@/lib/auth";
 
 export async function PATCH(req: NextRequest) {
   try {
-    
+    //proverava se token
     const token = await cookies().then(c => c.get("auth")?.value);
     if (!token) {
       return NextResponse.json({ error: "Niste ulogovani" }, { status: 401 });
     }
 
-    
+    //verifikuje se token, ako odgovara vraca se korisnik (sa subom
     const korisnik = verifikujToken(token);
 
    
-    const { rezervacijaId } = await req.json();
-    if (!rezervacijaId) {
+    const { rezervacijaId } = await req.json();//prosledjen mu je idRezervacije za izmenu
+
+    if (!rezervacijaId) {//ako ga nema 
       return NextResponse.json({ error: "Nedostaje ID rezervacije" }, { status: 400 });
     }
 

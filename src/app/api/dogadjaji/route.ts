@@ -10,6 +10,7 @@ export async function GET() {
     return NextResponse.json(
       { message: "Greška pri učitavanju tipova sala" },
       { status: 500 }
+      
     );
   }
 }

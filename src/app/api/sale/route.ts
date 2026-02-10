@@ -1,19 +1,26 @@
 import { db } from "@/db";
 import { Oprema, Rezervacija, Sala, SalaOprema, TipSale } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, lt } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 
-     
+
     try {
-    const url=new URL(req.url);
-    const kapacitetParametar=url.searchParams.get("kapacitet");
-    const kapacitet=kapacitetParametar?parseInt(kapacitetParametar):-1;
-    const tipParam=url.searchParams.get("tip");
-    const pocetakParam=url.searchParams.get("start");
-    
-    const zavrsetakParama=url.searchParams.get("end");
+
+        const sada = new Date();
+
+        await db.update(Rezervacija).set({
+            status: "zavrsena"
+        }).where(and(eq(Rezervacija.status, "aktuelno"), lt(Rezervacija.kraj, sada)));
+
+        const url = new URL(req.url);
+        const kapacitetParametar = url.searchParams.get("kapacitet");
+        const kapacitet = kapacitetParametar ? parseInt(kapacitetParametar) : -1;
+        const tipParam = url.searchParams.get("tip");
+        const pocetakParam = url.searchParams.get("start");
+
+        const zavrsetakParama = url.searchParams.get("end");
         //  let sale = await db.select().from(Sala);
         const rows = await db
             .select({
@@ -21,33 +28,38 @@ export async function GET(req: NextRequest) {
                 naziv: Sala.naziv,
                 kapacitet: Sala.kapacitet,
                 sprat: Sala.sprat,
-                urlSlike:Sala.urlSlike,
-                tipSale:Sala.idTipaSale,
+                urlSlike: Sala.urlSlike,
+                tipSale: Sala.idTipaSale,
                 opremaId: Oprema.id,
                 nazivOpreme: Oprema.nazivOpreme,
             })
             .from(Sala)
             .leftJoin(SalaOprema, eq(SalaOprema.salaId, Sala.id))
             .leftJoin(Oprema, eq(SalaOprema.opremaId, Oprema.id))
-            .leftJoin(TipSale,eq(Sala.idTipaSale,TipSale.id));
+            .leftJoin(TipSale, eq(Sala.idTipaSale, TipSale.id)); //da bi imali podatke za filtriranje po tipu, i da bi se ispisuje oprema
 
+        //dobili smo pojedinacne redove  { salaId: "1", naziv: "Sala A", opremaId: "1", nazivOpreme: "Projektor" },
+        // { salaId: "1", naziv: "Sala A", opremaId: "2", nazivOpreme: "Tabla" },
+        //{ salaId: "2", naziv: "Sala B", opremaId: null }
+
+        //a hocemo da ih grupisemo da svaka sala ima listu opreme
         // Grupisanje u strukturu po salama
         const map = new Map<string, any>();
 
-        for (const row of rows) {
+        for (const row of rows) { //grupisanje 
             if (!map.has(row.salaId)) {
                 map.set(row.salaId, {
                     id: row.salaId,
                     naziv: row.naziv,
                     kapacitet: row.kapacitet,
                     sprat: row.sprat,
-                    urlSlike:row.urlSlike,
-                    tipSale:row.tipSale,
+                    urlSlike: row.urlSlike,
+                    tipSale: row.tipSale,
                     oprema: [],
                 });
             }
 
-            if (row.opremaId) {
+            if (row.opremaId) {//ako ima opremu ubaci u listu opreme za tu salu
                 map.get(row.salaId).oprema.push({
                     id: row.opremaId,
                     naziv: row.nazivOpreme,
@@ -55,28 +67,30 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        let rezultat = Array.from(map.values());
-         if(kapacitet!==-1){
-          rezultat=rezultat.filter(s=>s.kapacitet<=kapacitet);
-    }
-const rezervacije=await db.select().from(Rezervacija).where(inArray(Rezervacija.status,["aktuelno","izmenjeno"]));
-    if(pocetakParam && zavrsetakParama){
-        const start = new Date(pocetakParam);
-        
-        const end = new Date(zavrsetakParama);
-        const rezervacijeIds=rezervacije.
-        filter(r=>{
-            const pocetak=r.pocetak;
-            const kraj=r.kraj;
-            return start<kraj && end>pocetak;
-        }).map(r=>r.salaId);
+        let rezultat = Array.from(map.values()); //pretvaranje mape u niz
 
-        rezultat=rezultat.filter(r=>!rezervacijeIds.includes(r.id));
-    }
-       if(tipParam){
-         rezultat=rezultat.filter(s=>s.tipSale===tipParam);
-    }
-    
+        if (kapacitet !== -1) {//ako je prosledjen kapacitet filtriraj po njem
+            rezultat = rezultat.filter(s => s.kapacitet >= kapacitet);
+        }
+
+        const rezervacije = await db.select().from(Rezervacija).where(inArray(Rezervacija.status, ["aktuelno", "izmenjeno"]));
+        if (pocetakParam && zavrsetakParama) {//ako su prosledjeni filtrira se ako ne nista
+            const start = new Date(pocetakParam);
+
+            const end = new Date(zavrsetakParama);
+            const rezervacijeIds = rezervacije.
+                filter(r => {
+                    const pocetak = r.pocetak;
+                    const kraj = r.kraj;
+                    return start < kraj && end > pocetak;
+                }).map(r => r.salaId);
+
+            rezultat = rezultat.filter(r => !rezervacijeIds.includes(r.id));//vracamo sale koje nisu rezervisale za tad
+        }
+        if (tipParam) {
+            rezultat = rezultat.filter(s => s.tipSale === tipParam);
+        }
+
         return NextResponse.json(rezultat);
         //return NextResponse.json(sale);
 

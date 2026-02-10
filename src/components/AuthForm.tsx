@@ -7,7 +7,8 @@ import Button from "./Button";
 import FormField from "./FormField";
 
 type Mode = "login" | "register";
-export default function AuthForm({ mode }: { mode: Mode }) {
+export default function AuthForm({ mode }: { mode: Mode }) { //kada je pozivamo prosledjujemo mode
+
   const router = useRouter();//omogucava navigaciju do drugih stranica
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,9 +21,11 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const btLabel = mode === "login" ? "Prijavi se" : "Napravi nalog ";
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault();//da se ne refresuje 
+
     setErr("");
     setLoading(true);
+
     if (mode === "register" && pwd !== confirmpwd) {
       setErr("Lozinke se ne poklapaju");
       window.alert(err);
@@ -30,9 +33,9 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       return;
     }
     try {
-      const endpoint = mode === "login" ? "/api/auth/login" : "api/auth/register";
-      const body = mode === "login" ? { email, password: pwd } : { name, email, password: pwd };
-      const odgovor = await fetch(endpoint, {
+      const endpoint = mode === "login" ? "/api/auth/login" : "api/auth/register"; //gde se prosledjuje zahtev
+      const body = mode === "login" ? { email, password: pwd } : { name, email, password: pwd }; //sta se prosledjuje
+      const odgovor = await fetch(endpoint, {//ovde ide ruta inace ovako "api/..."
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -41,15 +44,16 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
       if (!odgovor.ok) {
         setErr("Greska prilikom autentifikacije");
+        alert("Neispravni kredencijali");
         return;
       }
       if (mode === "login") {
         router.refresh();
-        router.push("/");
+        router.push("/");//kad se loginuje vraca na pocetnu
       }
       else {
         router.refresh();
-        router.push("/login");
+        router.push("/login");//kad se registruje vraca na registraciju
       }
     }
     finally {

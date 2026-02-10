@@ -14,45 +14,28 @@ type Rezervacija = {
   kraj: string;
   status: "aktuelno" | "otkazano" | "zavrsena" | "izmenjena";
 
-
-
-
 };
 
 
 export default function MojeRezervacije() {
   const [rezervacije, setRezervacije] = useState<Rezervacija[]>([]);
-  /*
-    useEffect(() => {
-      async function fetchRezervacije() {
-        try {
-          const res = await fetch("/api/rezervacija/moje", {
-            credentials: "include",
-          });
-          const data = await res.json();
-          setRezervacije(data);
-         
-        } catch (err) {
-          console.error("Greška pri učitavanju rezervacija", err);
-        }
-      }
-  
-      fetchRezervacije();
-    }, []);*/
+  //rezervacije koje treba da ucitamo iz baze i prikazemo
+
 
   const [recenzijaForma, setRecenzijaForma] = useState<string | null>(null);
-  const [rezervacijaZaIzmenu, setRezervacijaZaIzmenu] = useState<Rezervacija | null>(null);
+
+  const [rezervacijaZaIzmenu, setRezervacijaZaIzmenu] = useState<Rezervacija | null>(null);//ovo trenutno ne radi
   useEffect(() => {
 
 
-    fetchRezervacije();
+    fetchRezervacije();//prvi put pri renderovanju stranice poziva se ova metoda
   }, []);
   async function fetchRezervacije() {
     try {
-      const res = await fetch("/api/rezervacija/moje", {
+      const res = await fetch("/api/rezervacija/moje", {//salje get zahtev apiju za moje rezervacije
         credentials: "include",
       });
-      const data = await res.json();
+      const data = await res.json();//prevodimo odgovor u json i setujemo u listu rezervacija
       setRezervacije(data);
     } catch (err) {
       console.error("Greška pri učitavanju rezervacija", err);
@@ -63,7 +46,7 @@ export default function MojeRezervacije() {
     const potvrda = confirm("Da li ste sigurni da želite da otkažete rezervaciju?");
     if (!potvrda) return;
 
-    const res = await fetch("/api/rezervacija/otkazi", {
+    const res = await fetch("/api/rezervacija/otkazi", {//saljemo zahtev api da promeni status rezervacije u bazi
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -89,7 +72,7 @@ export default function MojeRezervacije() {
           <p>Status: {r.status}</p>
 
           {/* Dugmad prikazujemo samo ako je rezervacija aktuelna */}
-          {r.status === "aktuelno" && (
+          {r.status === "aktuelno" && ( //ako je aktuelna moze da se otkaze i izmeni
             <div className="mt-4 flex gap-2">
               <button className="bg-[#B6771D] text-[#7B542F] px-4 py-2 rounded hover:bg-[#FFCF71]"
                 onClick={() => otkaziRezervaciju(r.id)}
@@ -105,7 +88,7 @@ export default function MojeRezervacije() {
           )}
 
 
-          {r.status === "zavrsena" && (
+          {r.status === "zavrsena" && (//ako je zavrsena moze da napise recenziju i setujemo formu za recenziju kojoj prosledjujemo idRez
 
             < Button
               tekst="Recenzija"
@@ -117,8 +100,8 @@ export default function MojeRezervacije() {
 
 
 
-          {recenzijaForma === r.id && (
-            <RecenzijaForma
+          {recenzijaForma === r.id && (//ako smo pritisli dugme i onClick je setovao id
+            <RecenzijaForma //otvara se forma i prosledjuju joj se props rezervacijaID i onClose da se setuje na null da bi se zatvorila
               rezervacijaId={r.id}
               onClose={() => setRecenzijaForma(null)}
             />

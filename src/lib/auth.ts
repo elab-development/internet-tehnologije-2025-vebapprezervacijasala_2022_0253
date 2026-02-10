@@ -34,10 +34,10 @@ export function verifikujToken(token: string): JwtUserClaims {
 
 export function cookieOpts() {
     return {
-        httpOnly: true,
+        httpOnly: true, //sprecava koriscenje java scripta na klijentskoj strani
         sameSite: "lax" as const,
         secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7
+        path: "/", //vidljivost
+        maxAge: 60 * 60 * 24 * 7 //7 dana
     }
 }

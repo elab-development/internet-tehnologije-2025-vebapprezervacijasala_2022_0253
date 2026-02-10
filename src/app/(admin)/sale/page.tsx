@@ -17,9 +17,11 @@ export default function AdminSalePage() {
 
     fetchData();
   }, []);
+
+  
   async function fetchData() {
     try {
-      const saleRes = await fetch("/api/admin/sale");
+      const saleRes = await fetch("/api/admin/sale"); //vraca sve sale obican select upit
       setSale(await saleRes.json());
 
 
@@ -27,6 +29,8 @@ export default function AdminSalePage() {
       console.error("Greška pri učitavanju admin podataka:", err);
     }
   }
+
+
   async function obrisiSalu(id: string) {
     if (!confirm("Da li ste sigurni da želite da obrišete salu?")) return;
 
@@ -96,7 +100,9 @@ export default function AdminSalePage() {
           ))}
         </tbody>
       </table>
-      {dodajSaleForma && (
+
+
+      {dodajSaleForma && (//ako je pritisnuo dugme true je dodajSaleFormu otvaramo je
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 shadow-md w-full max-w-md relative">
             <button
@@ -108,7 +114,7 @@ export default function AdminSalePage() {
             <DodajSaluForm
               onSaved={() => {
                 fetchData();        // osveži tabelu
-                setDodajSaleForma(false); // zatvori modal
+                setDodajSaleForma(false); // zatvaramo je
               }}
             />
           </div>

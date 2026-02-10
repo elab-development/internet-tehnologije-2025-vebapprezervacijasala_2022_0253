@@ -19,7 +19,8 @@ export default function DodajSaluForm({ onSaved }: DodajSaluFormProps) {
   const [sprat, setSprat] = useState<number | "">("");
   const [urlSlike, setUrlSlike] = useState("");
   const [idTipaSale, setTipSaleId] = useState<string>("");
-  const [tipoviSala, setTipoviSala] = useState<TipSale[]>([]);
+
+  const [tipoviSala, setTipoviSala] = useState<TipSale[]>([]);//za option
 
   //const[slika,setSlika]=useState("");
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function DodajSaluForm({ onSaved }: DodajSaluFormProps) {
       return;
     }
 
-    try {
+    try {// poziva api da doda salu i prosledjuje parametre koje kupi iz svojih polja 
       const res = await fetch("/api/admin/sale/dodaj-sale", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,14 +66,14 @@ export default function DodajSaluForm({ onSaved }: DodajSaluFormProps) {
         return;
       }
 
-      alert("Sala je uspešno dodata!");
+      alert("Sala je uspešno dodata!");//osvezimo formu
       setNaziv("");
       setKapacitet("");
       setSprat("");
       setUrlSlike("");
       setTipSaleId("");
 
-      onSaved?.(); // poziva callback ako je definisan
+      onSaved?.(); 
     } catch (err) {
       console.error(err);
       alert("Došlo je do greške");

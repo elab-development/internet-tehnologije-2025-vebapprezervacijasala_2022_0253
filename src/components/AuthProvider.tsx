@@ -27,24 +27,27 @@ type AuthContextType = AuthState & {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+
   const [state, setState] = useState<AuthState>({ status: "loading", user: null });
 
   
-  const login = (user: User) => setState({ status: "authenticated", user });
-  const logout = () => setState({ status: "unauthenticated", user: null });
+  const login = (user: User) => setState({ status: "authenticated", user });//login menja state 
+  const logout = () => setState({ status: "unauthenticated", user: null });//logout menja state
 
-  useEffect(() => {
+  useEffect(() => {         //cookie se automatski salje
     fetch("/api/auth/me", { credentials: "include" })
       .then(res => res.json())
       .then(data => {
-        if (data.user) login(data.user);
+        if (data.user) login(data.user); //ako vrati user-a onda odradi login
         else logout();
       })
       .catch(() => logout());
   }, []);
 
 
-  const value = useMemo(() => ({ ...state, login, logout }), [state]);
+  const value = useMemo(() => ({ ...state, login, logout }), [state]); 
+  //sprečava nepotrebne rerendere,  context vrednost se menja samo kad se state promeni
+
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

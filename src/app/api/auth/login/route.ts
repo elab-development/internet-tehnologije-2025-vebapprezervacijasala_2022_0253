@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 //definisemo Body requesta
+
 type Body={
     email:string;
     password:string;
@@ -18,7 +19,7 @@ export async  function POST(req:Request){
             {status:401}
         )
      }
-
+//trazi korisnika sa tim emailom
      const[u]=await db.select(
         {
             idKorisnik:korisnik.idKorisnik,
@@ -35,6 +36,8 @@ export async  function POST(req:Request){
      }
 
      //ako je nasao po mejlu, idemo dalje sa proverama
+     //posto je sifra u bazi hasirana, hesira i ovu i uporedjuje ih
+
      const ok=await bcrypt.compare(password,u.passHash);
      if(!ok){
         return NextResponse.json({error:"Pogresam email ili lozinka"},
@@ -43,7 +46,10 @@ export async  function POST(req:Request){
      }
      //ako je pronasao korisnika generisi token
      const token=generisiToken({sub:u.idKorisnik,email:u.email,name:u.name,role:u.nazivUloge ?? "user"});
+
      const odgovor=NextResponse.json({id:u.idKorisnik,name:u.name,email:u.email,role:u.nazivUloge});
+     
+     //salje se informacija browseru
      odgovor.cookies.set(AUTH_COOKIE,token,cookieOpts())
      return odgovor;
 }

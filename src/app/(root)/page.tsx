@@ -23,13 +23,12 @@ type SalaDTO = {
   oprema: OpremaDTO[];
 };
 
-
 export default function Home() {
   const [sale, setSale] = useState<SalaDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchSveSale() {
+    async function fetchSveSale() { 
 
       try {
         const odgovor = await fetch("/api/sale");
@@ -42,13 +41,16 @@ export default function Home() {
         setLoading(false);
       }
     }
+
+
     fetchSveSale();
   }, [])
 
   return (
-    <div>
+    <div> 
       <PretragaSala setSale={setSale}/>
-      {loading ? ( <p className="text-center py-10">Učitavanje sala...</p>):
+      {loading ? ( <p className="text-black text-center py-10">Učitavanje sala...</p>):
+
       <PregledSala sale={sale}/>}
     </div>
 

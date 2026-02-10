@@ -5,6 +5,7 @@ import { Sala } from "@/db/schema";
 export async function GET() {
   try {
     const sale = await db.select().from(Sala);
+
     return NextResponse.json(sale);
   } catch (err) {
     console.error(err);

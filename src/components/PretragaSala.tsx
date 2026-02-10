@@ -27,9 +27,10 @@ type SalaDTO = {
   oprema: OpremaDTO[];
 };
 type Props={
-    setSale:(sale:SalaDTO[])=>void;//paren callback
+    setSale:(sale:SalaDTO[])=>void;// lista sala sa opremom
 }
 export default function PretragaSala({setSale}:Props){
+
      const[tipoviSala,setTipoviSala]=useState<TipSale[]>([]);
      const[kapacite,setKapacitet]=useState<number | "">("");
      const [selectedTip, setSelectedTip] = useState<string>("");
@@ -38,6 +39,9 @@ export default function PretragaSala({setSale}:Props){
      const[datumPocetka,setDatumPocetka]=useState<string>("");
      const[datumZavrsetka,setDatumZavrsetak]=useState<string>("");
      const[visednevnaPretraga,setVisednevnaPretraga]=useState(false);
+
+     //dovlacimo tipove za kombo
+
      useEffect(()=>{
       async function fetchTipoveSale() {
         
@@ -55,10 +59,12 @@ export default function PretragaSala({setSale}:Props){
 
     },[]);
 
+    //pri pretrazi dovlaci samo filtrirane valjda tamo se filtrira
     const handleSearch=async()=>{
         try{
             const url=new URL("/api/sale",window.location.origin);
-            if(kapacite!==""){
+            
+            if(kapacite!==""){ //?kapacitet=10
                 url.searchParams.set("kapacitet",kapacite.toString());
             }
             if (selectedTip) {
@@ -68,7 +74,7 @@ export default function PretragaSala({setSale}:Props){
             const start = `${datumPocetka}T${vremePocetka}`;
             url.searchParams.set("start", start);
             const end = visednevnaPretraga && datumZavrsetka 
-             ? `${datumZavrsetka}T${vremeZavrsetka}`
+             ? `${datumZavrsetka}T${vremeZavrsetka}` //spajanje datuma i vremena
              : `${datumPocetka}T${vremeZavrsetka}`;
              url.searchParams.set("end",end);
             

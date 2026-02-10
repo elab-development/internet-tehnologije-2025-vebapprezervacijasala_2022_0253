@@ -10,6 +10,7 @@ export async function GET() {
         email:korisnik.email,
         nazivUloge:Uloga.nazivUloge
     }).from(korisnik).leftJoin(Uloga,eq(Uloga.idUloge,korisnik.idUloga));
+    
     return NextResponse.json(korisnici);
   } catch (err) {
     console.error(err);

@@ -9,6 +9,7 @@ export default function RecenzijaForma({
   rezervacijaId: string;
   onClose: () => void;
 }) {
+
   const [ocena, setOcena] = useState(0);
   const [komentar, setKomentar] = useState("");
 
@@ -22,14 +23,14 @@ export default function RecenzijaForma({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({
+      body: JSON.stringify({//saljemo polja za recenziju apiju da ih upise u bazu
         rezervacijaId,
         ocena,
         komentar,
       }),
     });
 
-    onClose();
+    onClose();//prosledjeno je da se setuje u roditeljskoj RezervacijaForma na null
   }
 
   return (

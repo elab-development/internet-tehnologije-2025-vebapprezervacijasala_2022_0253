@@ -10,7 +10,8 @@ export async function POST() {
         secure: process.env.NODE_ENV === "production", // samo HTTPS na produkciji
         path: "/",
         maxAge: 0,
-        expires: new Date(0) //01.01.1970.
+        expires: new Date(0) //01.01.1970. stavljamo da nam je kuku istekao
+        //api/auth/me ce da vrati unautheni...
     })
 
     return res
