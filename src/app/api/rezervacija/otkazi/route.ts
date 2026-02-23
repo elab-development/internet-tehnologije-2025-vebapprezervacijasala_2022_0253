@@ -4,7 +4,72 @@ import { Rezervacija } from "@/db/schema";
 import { cookies } from "next/headers";
 import { and, eq } from "drizzle-orm";
 import { verifikujToken } from "@/lib/auth";
-
+/**
+ * @swagger
+ * /api/rezervacija/otkazi:
+ *   patch:
+ *     summary: Otkazivanje rezervacije
+ *     description: |
+ *       Otkazuje rezervaciju ulogovanog korisnika.
+ *       Može se otkazati samo aktivna rezervacija koja pripada korisniku.
+ *     tags:
+ *       - Rezervacije
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - rezervacijaId
+ *             properties:
+ *               rezervacijaId:
+ *                 type: integer
+ *                 example: 10
+ *     responses:
+ *       200:
+ *         description: Rezervacija uspešno otkazana
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Nedostaje ID rezervacije
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Nedostaje ID rezervacije
+ *       401:
+ *         description: Korisnik nije ulogovan
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Niste ulogovani
+ *       500:
+ *         description: Greška na serveru
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Greška na serveru
+ */
 export async function PATCH(req: NextRequest) {
   try {
     //proverava se token

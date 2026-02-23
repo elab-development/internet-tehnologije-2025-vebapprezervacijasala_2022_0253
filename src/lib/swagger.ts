@@ -8,6 +8,20 @@ const options = {
       version: "1.0.0",
       description: "Dokumentacija za backend API",
     },
+    components: {
+      securitySchemes: {
+        cookieAuth: {
+          type: "apiKey",
+          in: "cookie",
+          name: "auth"
+        }
+      }
+    },
+    security: [
+      {
+        cookieAuth: []
+      }
+    ]
   },
   apis: ["./src/app/api/**/*.ts"], // GDE su tvoje route.ts datoteke
 };

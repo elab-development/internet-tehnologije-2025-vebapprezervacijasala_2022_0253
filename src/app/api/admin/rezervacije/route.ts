@@ -2,6 +2,60 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { korisnik, Rezervacija, Sala } from "@/db/schema";
 import { and, lte, gte, eq, lt } from "drizzle-orm";
+/**
+ * @swagger
+ * /api/admin/rezervacije:
+ *   get:
+ *     summary: Lista svih rezervacija (admin)
+ *     description: |
+ *       Vraća sve rezervacije iz sistema.
+ *       Automatski označava rezervacije kao završene ako je njihov kraj prošao.
+ *     tags:
+ *       - Admin
+ *       - Rezervacije
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista rezervacija
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   idRezervacije:
+ *                     type: integer
+ *                     example: 12
+ *                   pocetak:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2026-02-25T10:00:00.000Z
+ *                   kraj:
+ *                     type: string
+ *                     format: date-time
+ *                     example: 2026-02-25T12:00:00.000Z
+ *                   name:
+ *                     type: string
+ *                     example: Marko Marković
+ *                   naziv:
+ *                     type: string
+ *                     example: Sala A
+ *                   status:
+ *                     type: string
+ *                     example: aktuelno
+ *       500:
+ *         description: Greška pri učitavanju rezervacija
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Greška pri učitavanju rezervacija
+ */
 export async function GET() {
   // backend (npr. /api/admin/rezervacije)
   try {

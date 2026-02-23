@@ -2,7 +2,98 @@ import { db } from "@/db";
 import { Oprema, Rezervacija, Sala, SalaOprema, TipSale } from "@/db/schema";
 import { and, eq, inArray, lt } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
-
+/**
+ * @swagger
+ * /api/sale:
+ *   get:
+ *     summary: Pretraga i filtriranje sala
+ *     description: |
+ *       Vraća listu sala sa pripadajućom opremom.
+ *       Podržava filtriranje po kapacitetu, tipu sale i vremenskom intervalu dostupnosti.
+ *       Automatski ažurira status rezervacija kojima je istekao termin.
+ *     tags:
+ *       - Sale
+ *     parameters:
+ *       - in: query
+ *         name: kapacitet
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 20
+ *         description: Minimalni kapacitet sale
+ *       - in: query
+ *         name: tip
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: konferencijska
+ *         description: Tip sale
+ *       - in: query
+ *         name: start
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *           example: 2026-02-25T10:00:00.000Z
+ *         description: Početak željenog termina rezervacije
+ *       - in: query
+ *         name: end
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *           example: 2026-02-25T12:00:00.000Z
+ *         description: Kraj željenog termina rezervacije
+ *     responses:
+ *       200:
+ *         description: Lista dostupnih sala
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "1"
+ *                   naziv:
+ *                     type: string
+ *                     example: Sala A
+ *                   kapacitet:
+ *                     type: integer
+ *                     example: 30
+ *                   sprat:
+ *                     type: integer
+ *                     example: 2
+ *                   urlSlike:
+ *                     type: string
+ *                     example: https://example.com/sala.jpg
+ *                   tipSale:
+ *                     type: string
+ *                     example: konferencijska
+ *                   oprema:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           example: "1"
+ *                         naziv:
+ *                           type: string
+ *                           example: Projektor
+ *       500:
+ *         description: Greška prilikom dohvatanja sala
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Greška prilikom dovlačenja sala
+ */
 export async function GET(req: NextRequest) {
 
 

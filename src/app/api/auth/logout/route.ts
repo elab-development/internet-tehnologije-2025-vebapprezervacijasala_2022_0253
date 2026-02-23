@@ -1,6 +1,42 @@
 import { AUTH_COOKIE } from "@/lib/auth";
 import { NextResponse } from "next/server";
-
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Odjava korisnika
+ *     description: Briše autentifikacioni cookie i odjavljuje trenutno prijavljenog korisnika.
+ *     tags:
+ *       - Autentifikacija
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Uspešna odjava
+ *         headers:
+ *           Set-Cookie:
+ *             description: Briše JWT autentifikacioni cookie (postavlja prazan cookie sa isteklim rokom)
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                   example: true
+ *       401:
+ *         description: Korisnik nije autentifikovan
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Niste prijavljeni
+ */
 export async function POST() {
     const res = NextResponse.json({ ok: true })
 

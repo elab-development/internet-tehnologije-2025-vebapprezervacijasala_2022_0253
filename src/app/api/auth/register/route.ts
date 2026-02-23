@@ -5,7 +5,78 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt"
 import { AUTH_COOKIE, cookieOpts, generisiToken } from "@/lib/auth";
-
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Registracija korisnika
+ *     description: Kreira novog korisnika, dodeljuje mu ulogu "user", generiše JWT token i postavlja autentifikacioni cookie.
+ *     tags:
+ *       - Autentifikacija
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Marko Marković
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: marko@gmail.com
+ *               password:
+ *                 type: string
+ *                 example: mojaLozinka123
+ *     responses:
+ *       200:
+ *         description: Uspešna registracija
+ *         headers:
+ *           Set-Cookie:
+ *             description: JWT autentifikacioni cookie
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: Marko Marković
+ *                 email:
+ *                   type: string
+ *                   example: marko@gmail.com
+ *       400:
+ *         description: Email već postoji
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Email vec postoji
+ *       401:
+ *         description: Nedostaju podaci
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Nedostaju podaci
+ */
 type Body = {
 
     name: string;
