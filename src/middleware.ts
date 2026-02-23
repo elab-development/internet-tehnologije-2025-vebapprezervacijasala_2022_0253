@@ -14,7 +14,8 @@ export async function middleware(req: NextRequest) {
     "/api/auth/register",
     "/api/auth/me",
     "/api/sale",
-    "/api/tipoviSale"
+    "/api/tipoviSale",
+    "/api/swagger"
   ];
 
   
@@ -48,6 +49,7 @@ export async function middleware(req: NextRequest) {
   }
 
 
+  
   const adminStranice = ["/dashboard", "/rezervacije", "/sale"];
   
   if (adminStranice.some(stranica => pathname.startsWith(stranica))) {

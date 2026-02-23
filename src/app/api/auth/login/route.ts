@@ -11,6 +11,67 @@ type Body={
     email:string;
     password:string;
 }
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Prijava korisnika
+ *     description: Proverava email i lozinku korisnika i vraća osnovne podatke o korisniku. Postavlja auth cookie sa JWT tokenom.
+ *     tags:
+ *       - Autentifikacija
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: marko@gmail.com
+ *               password:
+ *                 type: string
+ *                 example: mojaLozinka123
+ *     responses:
+ *       200:
+ *         description: Uspešna prijava
+ *         headers:
+ *           Set-Cookie:
+ *             description: JWT autentifikacioni cookie
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: Marko Marković
+ *                 email:
+ *                   type: string
+ *                   example: marko@gmail.com
+ *                 role:
+ *                   type: string
+ *                   example: admin
+ *       401:
+ *         description: Pogrešan email ili lozinka
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Pogresan email ili lozinka
+ */
 
 export async  function POST(req:Request){
     const{email,password}=(await req.json()) as Body;
