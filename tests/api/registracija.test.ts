@@ -1,83 +1,64 @@
-/// <reference types="jest" />
-import { POST } from '@/app/api/auth/register/route';
-import { db } from '@/db';
-import { korisnik, Uloga } from '@/db/schema';
-import { eq } from 'drizzle-orm';
-import bcrypt from 'bcrypt';
+// tests/api/registracija.test.ts
+import { POST } from "@/app/api/auth/register/route";
+import { NextResponse } from "next/server";
 
-describe('POST /api/auth/register', () => {
-  let createdUserId: string;
+describe("POST /api/auth/register", () => {
 
-  afterEach(async () => {
-    if (createdUserId) {
-      await db.delete(korisnik).where(eq(korisnik.idKorisnik, createdUserId));
-      createdUserId = '';
-    }
-  });
+  it("registers a new user and returns user data", async () => {
+    // generišemo unikatan email za svaki test run
+    const randomEmail = `user${Date.now()}@example.com`;
 
-  it('registers a new user and returns user data', async () => {
-    const req = new Request('http://localhost/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: 'Test User',
-        email: 'testuser@example.com',
-        password: 'Test1234!'
-      }),
-    });
+    // pravimo "request" objekat koji POST handler očekuje
+    const req = {
+      json: async () => ({
+        name: "Test User",
+        email: randomEmail,
+        password: "password123"
+      })
+    } as Request;
 
     const res = await POST(req);
+
+    // status mora da bude 200
     expect(res.status).toBe(200);
 
+    // pročitaj response JSON
     const data = await res.json();
-    expect(data).toHaveProperty('id');
-    expect(data.name).toBe('Test User');
-    expect(data.email).toBe('testuser@example.com');
 
-    createdUserId = data.id;
+    // proveri da li vraća očekivane podatke
+    expect(data).toHaveProperty("id");
+    expect(data).toHaveProperty("name", "Test User");
+    expect(data).toHaveProperty("email", randomEmail);
 
-    // proveri da li cookie postoji
-    const setCookie = res.headers.get('set-cookie');
-    expect(setCookie).toContain('auth=');
+    // proveri da li je cookie postavljen
+    const setCookie = res.headers.get("set-cookie");
+    expect(setCookie).toBeDefined();
+    expect(setCookie).toMatch(/auth=/); // ime cookie-ja iz auth.ts (možeš zameniti sa AUTH_COOKIE)
   });
 
-  it('returns 400 if email already exists', async () => {
-    // prvo kreiramo korisnika direktno u bazi
-    const [role] = await db.select({ id: Uloga.idUloge }).from(Uloga).where(eq(Uloga.nazivUloge, 'user'));
-    const passHash = await bcrypt.hash('pass', 10);
-    const [u] = await db.insert(korisnik).values({
-      name: 'Exist User',
-      email: 'exist@example.com',
-      passHash,
-      idUloga: role.id
-    }).returning({ id: korisnik.idKorisnik });
-    createdUserId = u.id;
+  it("returns 400 if email already exists", async () => {
+    const email = `duplicate${Date.now()}@example.com`;
 
-    const req = new Request('http://localhost/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: 'Exist User 2',
-        email: 'exist@example.com',
-        password: 'pass'
-      }),
-    });
+    // prvi unos - uspešan
+    const req1 = { json: async () => ({ name: "User1", email, password: "pass123" }) } as Request;
+    await POST(req1);
 
-    const res = await POST(req);
-    expect(res.status).toBe(400);
+    // drugi unos sa istim email-om - mora da baci grešku 400
+    const req2 = { json: async () => ({ name: "User2", email, password: "pass123" }) } as Request;
+    const res2 = await POST(req2);
 
-    const data = await res.json();
-    expect(data.error).toBe('Email vec postoji');
+    expect(res2.status).toBe(400);
+    const data2 = await res2.json();
+    expect(data2).toHaveProperty("error", "Email vec postoji");
   });
 
-  it('returns 401 if missing fields', async () => {
-    const req = new Request('http://localhost/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name: 'No Email', password: 'pass' }),
-    });
-
+  it("returns 401 if missing data", async () => {
+    const req = { json: async () => ({ name: "", email: "", password: "" }) } as Request;
     const res = await POST(req);
+
     expect(res.status).toBe(401);
-
     const data = await res.json();
-    expect(data.error).toBe('Nedostaju podaci');
+    expect(data).toHaveProperty("error", "Nedostaju podaci");
   });
+
 });
