@@ -82,7 +82,7 @@ npm run dev
 
 ### Build projekta 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 ### Bez build-ovanja
 ```bash
