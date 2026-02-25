@@ -5,23 +5,31 @@ import { db } from '@/db';
 import { korisnik, Uloga } from '@/db/schema';
 import bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
+import { AUTH_COOKIE } from '@/lib/auth';
+
 
 describe('POST /api/auth/login', () => {
 
-  const testEmail = 'testuser@example.com';
+  const testEmail = 'test@gmail.com';
   const testPassword = 'Test1234!';
   let testUserId: string;
+  let testUlogaId: string;
 
   beforeAll(async () => {
-    // Kreiraj testnog korisnika sa hash-ovanom lozinkom
-    const passHash = await bcrypt.hash(testPassword, 10);
+    // Kreiranje nove uloge da bi imali validan strani kljuc
+    const [novaUloga]=await db.insert(Uloga).values({
+      nazivUloge:"test_uloga_login"
+    }).returning({id:Uloga.idUloge});
+    testUlogaId=novaUloga.id;
 
+    //Hasiramo lozinku i pravimo korisnika
+    const passHash = await bcrypt.hash(testPassword, 10);
     const [u] = await db.insert(korisnik)
       .values({
         name: 'Test User',
         email: testEmail,
         passHash,
-        idUloga: '1a532d97-2a35-4884-93f0-63c1f3723786' 
+        idUloga: testUlogaId
       })
       .returning({id:korisnik.idKorisnik});
 
@@ -29,11 +37,12 @@ describe('POST /api/auth/login', () => {
   });
 
   afterAll(async () => {
-    // Obriši testnog korisnika
+    // Brisanje tekstnog korisnika i uloge
     await db.delete(korisnik).where(eq(korisnik.idKorisnik, testUserId));
+    await db.delete(Uloga).where(eq(Uloga.idUloge,testUlogaId));
   });
 
-  it('returns 200 and token cookie for valid credentials', async () => {
+  it('uspesna prijava:vraca 200 i postavlja auth kolacic', async () => {
     const req = new NextRequest('http://localhost/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email: testEmail, password: testPassword })
@@ -43,17 +52,18 @@ describe('POST /api/auth/login', () => {
 
     expect(res.status).toBe(200);
     const data = await res.json();
-    expect(data).toHaveProperty('id', testUserId);
-    expect(data).toHaveProperty('email', testEmail);
-    expect(data).toHaveProperty('name', 'Test User');
+    expect(data.id).toBe(testUserId);
+    expect(data.email).toBe(testEmail);
+    expect(data.name).toBe('Test User');
     expect(data).toHaveProperty('role');
 
     // proveri da li je cookie setovan
     const cookie = res.headers.get('set-cookie');
-    expect(cookie).toContain('auth'); // AUTH_COOKIE
+    expect(cookie).not.toBeNull();
+    expect(cookie).toContain(AUTH_COOKIE); // AUTH_COOKIE
   });
 
-  it('returns 401 for wrong password', async () => {
+  it('neuspesna prijava: pogresna lozinka vraća 401', async () => {
     const req = new NextRequest('http://localhost/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email: testEmail, password: 'WrongPass' })
@@ -63,10 +73,10 @@ describe('POST /api/auth/login', () => {
 
     expect(res.status).toBe(401);
     const data = await res.json();
-    expect(data).toHaveProperty('error');
+    expect(data.error).toBe("Pogresam email ili lozinka");
   });
 
-  it('returns 401 for non-existing email', async () => {
+  it('neuspesna prijava: nepostojeci email vraca 401', async () => {
     const req = new NextRequest('http://localhost/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email: 'noone@example.com', password: '1234' })
@@ -76,7 +86,8 @@ describe('POST /api/auth/login', () => {
 
     expect(res.status).toBe(401);
     const data = await res.json();
-    expect(data).toHaveProperty('error');
+    expect(data.error).toBe("Pogresam email ili lozinka");
+  
   });
 
 });

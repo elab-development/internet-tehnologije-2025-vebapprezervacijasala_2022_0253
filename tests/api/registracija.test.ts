@@ -1,13 +1,23 @@
 // tests/api/registracija.test.ts
 import { POST } from "@/app/api/auth/register/route";
+import { db } from "@/db";
+import { korisnik } from "@/db/schema";
+import { AUTH_COOKIE } from "@/lib/auth";
+import { inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 describe("POST /api/auth/register", () => {
-
-  it("registers a new user and returns user data", async () => {
+ //pratimo koje smo sve mejlove napravili
+    let kreiraniMejlovi: string[]=[];
+    afterAll(async()=>{
+      if(kreiraniMejlovi.length>0){
+        await db.delete(korisnik).where(inArray(korisnik.email,kreiraniMejlovi));
+      }
+    })
+  it("usepesno registruje novog korisnika i postavlja kuki", async () => {
     // generišemo unikatan email za svaki test run
     const randomEmail = `user${Date.now()}@example.com`;
-
+    kreiraniMejlovi.push(randomEmail);
     // pravimo "request" objekat koji POST handler očekuje
     const req = {
       json: async () => ({
@@ -33,12 +43,12 @@ describe("POST /api/auth/register", () => {
     // proveri da li je cookie postavljen
     const setCookie = res.headers.get("set-cookie");
     expect(setCookie).toBeDefined();
-    expect(setCookie).toMatch(/auth=/); // ime cookie-ja iz auth.ts (možeš zameniti sa AUTH_COOKIE)
+    expect(setCookie).toContain(AUTH_COOKIE);
   });
 
-  it("returns 400 if email already exists", async () => {
+  it("vraca 400 ako email vec postoji u bazi", async () => {
     const email = `duplicate${Date.now()}@example.com`;
-
+    kreiraniMejlovi.push(email);
     // prvi unos - uspešan
     const req1 = { json: async () => ({ name: "User1", email, password: "pass123" }) } as Request;
     await POST(req1);
@@ -49,16 +59,16 @@ describe("POST /api/auth/register", () => {
 
     expect(res2.status).toBe(400);
     const data2 = await res2.json();
-    expect(data2).toHaveProperty("error", "Email vec postoji");
+    expect(data2.error).toBe("Email vec postoji")
   });
 
-  it("returns 401 if missing data", async () => {
+  it("vraca 401 ako nedostaju obavezna polja", async () => {
     const req = { json: async () => ({ name: "", email: "", password: "" }) } as Request;
     const res = await POST(req);
 
     expect(res.status).toBe(401);
     const data = await res.json();
-    expect(data).toHaveProperty("error", "Nedostaju podaci");
+    expect(data.error).toBe("Nedostaju podaci");
   });
 
 });
