@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop]
+
+jobs:
+  # FAZA 1: Testiranje i građenje Docker Image-a
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      # Podižemo bazu koju će Docker image koristiti tokom testa
+      db:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sala_baza
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout koda
+        uses: actions/checkout@v4
+
+      # 1. Građenje Docker slike (Zahtev: "gradi Docker image")
+      - name: Build Docker Image
+        run: docker build -t sala-app:latest .
+
+      # 2. Pokretanje testova UNUTAR image-a
+      - name: Run Tests in Docker
+        run: |
+          docker run --rm \
+            --network host \
+            -e DATABASE_URL=postgres://postgres:postgres@localhost:5432/sala_baza \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            sala-app:latest \
+            sh -c "npx drizzle-kit push && npm test"
+
+ 
