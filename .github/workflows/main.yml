@@ -43,6 +43,6 @@ jobs:
             -e DATABASE_URL=postgres://postgres:postgres@localhost:5432/sala_baza \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             sala-app:latest \
-            sh -c "npx drizzle-kit push && npm test"
+            sh -c "npx drizzle-kit push && npx tsx src/db/seed.ts && npm test -- --forceExit"
 
  
