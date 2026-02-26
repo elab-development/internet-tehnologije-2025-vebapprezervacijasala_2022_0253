@@ -4,7 +4,7 @@ import { createRequest, createResponse } from 'node-mocks-http';
 
 describe('GET /api/admin/korisnici', () => {
   it('returns list of korisnici', async () => {
-    const response = await GET();
+    const response = await GET(); //poziv metode iz route
 
     expect(response.status).toBe(200);
 

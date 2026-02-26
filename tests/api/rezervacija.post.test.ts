@@ -57,7 +57,7 @@ describe("POST /api/rezervacija - Integracioni test", () => {
     });
   });
 
-  afterAll(async () => {
+  afterAll(async () => {//Ciscenje baze
    
     await db.delete(Rezervacija).where(eq(Rezervacija.salaId, testSalaId));
     await db.delete(Sala).where(eq(Sala.id, testSalaId));

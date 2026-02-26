@@ -5,7 +5,7 @@ import { Rezervacija, korisnik, Uloga, Sala, TipSale } from "@/db/schema";
 import { generisiToken } from "@/lib/auth";
 import { eq, and } from "drizzle-orm";
 
-// 1. Mock-ujemo cookies da bismo izbegli "Request Scope" grešku 🎭
+// 1. Mock-ujemo cookies 
 jest.mock("next/headers", () => ({
   cookies: jest.fn(),
 }));
@@ -77,7 +77,7 @@ describe("PATCH /api/rezervacija/otkazi - Integracioni test", () => {
     expect(res.status).toBe(200);
     expect(data.success).toBe(true);
 
-    // 5. Provera u bazi: Da li je status zaista promenjen? 
+    // 5. Provera u bazi da li je status promenjen? 
     const [osvezenaRez] = await db
       .select()
       .from(Rezervacija)

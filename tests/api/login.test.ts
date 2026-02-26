@@ -52,12 +52,13 @@ describe('POST /api/auth/login', () => {
 
     expect(res.status).toBe(200);
     const data = await res.json();
+    //provera da li se poklapaju posati podaci
     expect(data.id).toBe(testUserId);
     expect(data.email).toBe(testEmail);
     expect(data.name).toBe('Test User');
     expect(data).toHaveProperty('role');
 
-    // proveri da li je cookie setovan
+    // proveri da li je cookie setovan !
     const cookie = res.headers.get('set-cookie');
     expect(cookie).not.toBeNull();
     expect(cookie).toContain(AUTH_COOKIE); // AUTH_COOKIE
@@ -66,7 +67,7 @@ describe('POST /api/auth/login', () => {
   it('neuspesna prijava: pogresna lozinka vraća 401', async () => {
     const req = new NextRequest('http://localhost/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email: testEmail, password: 'WrongPass' })
+      body: JSON.stringify({ email: testEmail, password: 'WrongPass' }) //provera sa pogresnom lozinkom
     });
 
     const res = await POST(req);
@@ -79,7 +80,7 @@ describe('POST /api/auth/login', () => {
   it('neuspesna prijava: nepostojeci email vraca 401', async () => {
     const req = new NextRequest('http://localhost/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email: 'noone@example.com', password: '1234' })
+      body: JSON.stringify({ email: 'noone@example.com', password: '1234' })//provera sa pogresnim mejlom
     });
 
     const res = await POST(req);

@@ -9,6 +9,7 @@ describe('DELETE /api/admin/sale/:id', () => {
 
 
   let testSalaId: string;
+  //ubacujemo sve nove podatke kako ne bi remetili nasu bazu
   it('vraca 409 ako sala ima aktuelne rezervacije',async()=>{
     const [tip]=await db.insert(TipSale).values({
       naziv:"Testni tip",
@@ -39,6 +40,7 @@ describe('DELETE /api/admin/sale/:id', () => {
      expect(res.status).toBe(409);
      const data=await res.json();
      expect(data.error).toBe("Sala ima aktivne rezervacije i ne može se obrisati");
+     //Cistimo bazu
     await db.delete(Rezervacija).where(eq(Rezervacija.salaId, novaSala.id));
     await db.delete(Sala).where(eq(Sala.id, novaSala.id));
     await db.delete(TipSale).where(eq(TipSale.id, tip.id));
@@ -68,6 +70,7 @@ describe('DELETE /api/admin/sale/:id', () => {
      const data=await res.json();
      expect(data.ok).toBe(true);
 
+     //provera da li je obrisana
      const provera=await db.select().from(Sala).where(eq(Sala.id,novaSala.id));
      expect(provera.length).toBe(0);
      await db.delete(TipSale).where(eq(TipSale.id, tip.id));

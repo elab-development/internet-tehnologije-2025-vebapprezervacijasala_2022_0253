@@ -9,7 +9,8 @@ import { NextRequest } from 'next/server';
 describe('POST /api/admin/sale/dodaj-sale', () => {
 //ciscenje nakon svakog testa
   let privremeniTipId: string|undefined;
-  afterEach(async()=>{
+
+  afterEach(async()=>{//Ciscenje baze
     if(privremeniTipId){
       await db.delete(Sala).where(eq(Sala.idTipaSale,privremeniTipId));
       await db.delete(TipSale).where(eq(TipSale.id,privremeniTipId));

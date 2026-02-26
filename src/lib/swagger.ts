@@ -23,7 +23,7 @@ const options = {
       }
     ]
   },
-  apis: ["./src/app/api/**/*.ts"], // GDE su tvoje route.ts datoteke
+  apis: ["./src/app/api/**/*.ts"], 
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

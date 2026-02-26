@@ -7,13 +7,16 @@ import { inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 describe("POST /api/auth/register", () => {
- //pratimo koje smo sve mejlove napravili
+ //pratimo koje smo sve mejlove dodali
     let kreiraniMejlovi: string[]=[];
+
+    //posle svega brisemo testne korisnike
     afterAll(async()=>{
       if(kreiraniMejlovi.length>0){
         await db.delete(korisnik).where(inArray(korisnik.email,kreiraniMejlovi));
       }
     })
+
   it("usepesno registruje novog korisnika i postavlja kuki", async () => {
     // generišemo unikatan email za svaki test run
     const randomEmail = `user${Date.now()}@example.com`;

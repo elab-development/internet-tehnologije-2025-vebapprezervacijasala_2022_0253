@@ -12,7 +12,7 @@ describe('GET /api/admin/sale', () => {
     // rezultat je niz
     expect(Array.isArray(data)).toBe(true);
 
-    // ako postoji barem jedna sala, provjeri polja
+    // ako postoji barem jedna sala, proveri polja
     if (data.length > 0) {
       expect(data[0]).toHaveProperty('id');       // id sale
       expect(data[0]).toHaveProperty('naziv');    // naziv sale
